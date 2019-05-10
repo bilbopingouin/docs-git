@@ -22,10 +22,12 @@
         git commit -a -m "fixed!"
 
   3. Merge new branch into master
+
         git checkout master         # back to master branch
         git merge fix-branch        # fast forward the master branch
 
   4. Delete temporary branch and back to working branch
+
         git checkout -d fix-branch  # delete the fix-branch
         git checkout branch-name    # back to working branch
 
@@ -256,9 +258,9 @@ using dichotomy and good/bad markers git helps to find the revision where a but 
 
 repeat at each steps...
 
-    git bisect good			# test/check and define good/bad. Each time, it checks out another version
+    git bisect good                     # test/check and define good/bad. Each time, it checks out another version
     git bisect bad
-	
+        
 ends with
 
     git bisect reset                    # end the bisect and reset back HEAD to its original version
@@ -524,68 +526,68 @@ E.g.
       echo bar >> a
       git add a
       git commit -m "bar in a"
-	
+        
 - Situation
 
       git status
-	    On branch master
-	    nothing to commit, working tree clean
+            On branch master
+            nothing to commit, working tree clean
 
       git --no-pager tree
-	  * 65fc7f4 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - bar in a
-	    * e0e202f 2018-09-11 [Tudi Le Bleis, N] - foo in a
-	    * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
+          * 65fc7f4 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - bar in a
+            * e0e202f 2018-09-11 [Tudi Le Bleis, N] - foo in a
+            * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
 
       cat a
-	    foo
-	    bar
-	    
+            foo
+            bar
+            
 - Effect of `git reset --soft HEAD~`
 
       git status
-	    On branch master
-	    Changes to be committed:
-		(use "git reset HEAD <file>..." to unstage)
+            On branch master
+            Changes to be committed:
+                (use "git reset HEAD <file>..." to unstage)
 
-		  modified:   a
+                  modified:   a
       git --no-pager tree
-	  * e0e202f 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - foo in a
+          * e0e202f 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - foo in a
           * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
 
       cat a
-	    foo
-	    bar
-	    
+            foo
+            bar
+            
  - Effect of `git reset --mixed HEAD~`
 
       git status
-	    On branch master
-	    Changes not staged for commit:
-		(use "git add <file>..." to update what will be committed)
-		(use "git checkout -- <file>..." to discard changes in working directory))
+            On branch master
+            Changes not staged for commit:
+                (use "git add <file>..." to update what will be committed)
+                (use "git checkout -- <file>..." to discard changes in working directory))
 
-		  modified:   a
+                  modified:   a
       git --no-pager tree
-	  * e0e202f 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - foo in a
+          * e0e202f 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - foo in a
           * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
 
       cat a
-	    foo
-	    bar
-	    
+            foo
+            bar
+            
 - Effect of `git reset --hard HEAD~`
 
       git status
-	    On branch master
-	    nothing to commit, working tree clean
+            On branch master
+            nothing to commit, working tree clean
 
       git --no-pager tree
-	  * e0e202f 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - foo in a
-	    * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
+          * e0e202f 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - foo in a
+            * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
 
       cat a
-	    foo
-	    
+            foo
+            
 Instead of calling with `HEAD~`, calling reset HEAD does:
 - `--soft`: nothing
 - `--mixed`: reverse git add
@@ -774,18 +776,18 @@ IIt can be done as
 If we have a structure like
 
     foo/
-	.git/
-	abc/
-	def/
+        .git/
+        abc/
+        def/
 
 and want to get to
 
     foo/
-	.git/
-	abc/
+        .git/
+        abc/
     bar/
-	.git/
-	def/
+        .git/
+        def/
 
 for a  recent git version (>=1.7.11)
 
@@ -849,7 +851,7 @@ we have two repositories
 and want to get
 
     mainrep/
-	repdir
+        repdir
 
 - using subtree
 
@@ -924,8 +926,8 @@ Cherry-picking
 Result
 
     cat foo
-	hello
-	world
+        hello
+        world
 
 See also
 - [Cherry pick](http://wiki.koha-community.org/wiki/Using_Git_Cherry_Pick)
@@ -948,9 +950,9 @@ An applied somewhere else
 
 Alternatively one can also create a patch like
 
-    git format-patch HEAD~~				      # will create two files for the previous two commits
+    git format-patch HEAD~~                                   # will create two files for the previous two commits
     git format-patch 338bf1bd431a34cd8d5f0a0cad524e2848b5cc98 # will create N files for the N commits since the marked commit
-    git diff 338bf1b fcc8a9f > my_patch.txt		      # Create a patch from the difference between two commits
+    git diff 338bf1b fcc8a9f > my_patch.txt                   # Create a patch from the difference between two commits
 
 See also
 - [How to create and apply a patch with git](https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/)
@@ -1030,32 +1032,32 @@ There are various ways to achieve it.
 
   - if git already there:
 
-	git clone https://github.com/git/git
+        git clone https://github.com/git/git
 
   - else:
 
-	wget https://www.kernel.org/pub/software/scm/git/git-2.2.2.tar.xztar -xvJf git-2.2.2.tar.xz
+        wget https://www.kernel.org/pub/software/scm/git/git-2.2.2.tar.xztar -xvJf git-2.2.2.tar.xz
 
     install some required packages
 
-	aptitude install autoconf
-	aptitude install asciidoc
-	aptitude install docbook2x
-	aptitude install curl
+        aptitude install autoconf
+        aptitude install asciidoc
+        aptitude install docbook2x
+        aptitude install curl
 
     build
 
-	make configure
-	./configure --prefix=/usr/local
-	make all doc info
-	su -c "make install install-doc install-html install-info"
+        make configure
+        ./configure --prefix=/usr/local
+        make all doc info
+        su -c "make install install-doc install-html install-info"
 
     See [Installing git](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
     make it available
 
-	sudo echo -e "#\!/bin/bash\\n/usr/local/bin/git \$*" > /usr/local/bin/git-2.3
-	sudo chmod +x /usr/local/bin/git-2.3
+        sudo echo -e "#\!/bin/bash\\n/usr/local/bin/git \$*" > /usr/local/bin/git-2.3
+        sudo chmod +x /usr/local/bin/git-2.3
 
 ### git orphaned commit
 
@@ -1168,22 +1170,22 @@ in gitolite conf:
 as user
 
     git clone git@gitserver:sd/user/tlb/P0023_FC_SubSea-feas-energy
-	
+        
 cloning a local repo:
 
     git remote add local ../P0023_FC_SubSea/
     git fetch --all
     git merge --ff local/master
     git push origin --mirror
-	    
+            
 or otherwise
 
     repo sd/user/CREATOR/[a-z]..*
-	C   = @dev
-	RW+ = CREATOR
-	RW  = WRITERS
-	R   = READERS
-	    
+        C   = @dev
+        RW+ = CREATOR
+        RW  = WRITERS
+        R   = READERS
+            
 and then
 
     ssh git@gitserver perms -h
@@ -1229,21 +1231,21 @@ Note that the order is important
 
 #### Remote commands
 
-    ssh git@gitserver help          prints some help
-    ssh git@gitserver info          lists the repo accessible
-    ssh git@gitserver perms         sets permission for wild-repos
-    ssh git@gitserver desc          shows or sets descriptions for repos
-    ssh git@gitserver writable      enables or disables push to a repo
-    ssh git@gitserver xxxxxxxx -h   provides help on the command
+- `ssh git@gitserver help`          prints some help
+- `ssh git@gitserver info`          lists the repo accessible
+- `ssh git@gitserver perms`         sets permission for wild-repos
+- `ssh git@gitserver desc`          shows or sets descriptions for repos
+- `ssh git@gitserver writable`      enables or disables push to a repo
+- `ssh git@gitserver xxxxxxxx -h`   provides help on the command
 
 #### Multiple keys
 
 Some user want to have an access from different machines
 
     keydir/alice/home/alice.pub
-		/work/alice.pub
-	  /bobsmith/home/bob.pub
-	  /admin.pub
+                /work/alice.pub
+          /bobsmith/home/bob.pub
+          /admin.pub
 
 In the configuration file, `alice` can be used, and will match both keys.
 
@@ -1254,21 +1256,21 @@ It is possible to define groups and or aliases for users like
     @dev=alice bob
 
     repo proj
-	RW+ = @dev
+        RW+ = @dev
 
 But also to give some default rights to a series of repos
 
     @productA=prodA/..*
 
     repo @productA
-	RW+ = alice
-	R   = bob
+        RW+ = alice
+        R   = bob
 
     repo prodA/proj1
-	RW+ = bob
+        RW+ = bob
 
     repo prodA/proj2
-	RW+ = carl
+        RW+ = carl
 
 Alice and Bob have `RW+` rights on `proj1`
 Alice and Carl have `RW+` rights on `proj2`, but Bob still has `R` rights.
@@ -1353,9 +1355,9 @@ Examples
   do
       if [  ! -z `echo "$local_ref" | grep "local*"` ]
       then
-	  echo "This is defined as a local branch."
-	  echo "A hook is prevening you from pushing local branches."
-	  exit 1
+          echo "This is defined as a local branch."
+          echo "A hook is prevening you from pushing local branches."
+          exit 1
       fi
   done
 
@@ -1399,7 +1401,7 @@ cat update_git.sh
 
     if [ -e $FILE ]
     then
-	rm -f $FILE
+        rm -f $FILE
     fi
 
     echo "#define GIT_VERSION \"$(git rev-parse --short=8 HEAD)\"" >> $FILE
@@ -1662,11 +1664,11 @@ Commands from within tig
   - `c`       Switch to stage view
 
 - navigation
-  - `q`		  Close view
-  - `<CR>`	  Open diff view, or similar actions
-  - `k`/`<up>`	  Previous commit/line
+  - `q`           Close view
+  - `<CR>`        Open diff view, or similar actions
+  - `k`/`<up>`    Previous commit/line
   - `j`/`<down>`  Next commit/line
-  - `<tab>`	  Switch to the next view
+  - `<tab>`       Switch to the next view
 
 - various
   - `Q`       Close tig
