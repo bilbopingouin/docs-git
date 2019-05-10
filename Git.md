@@ -4,8 +4,10 @@
 
 - Cloning and getting to another branch
 
-      git clone me@server:repo
-      git checkout -b branch-name
+  ```bash
+  git clone me@server:repo
+  git checkout -b branch-name
+  ```
 
   now working on another branch with the name branch-name can do git commit, push, etc.
 
@@ -13,23 +15,31 @@
 
   1. Switching back to master:
 
-        git checkout master
+    ```bash
+    git checkout master
+    ```
 
   2. Creating a new branch
 
-        git checkout -b fix-branch v0.1
-        (change everything one needs)
-        git commit -a -m "fixed!"
+    ```bash
+     git checkout -b fix-branch v0.1
+     #change everything one needs
+     git commit -a -m "fixed!"
+     ```
 
   3. Merge new branch into master
 
-        git checkout master         # back to master branch
-        git merge fix-branch        # fast forward the master branch
+    ```bash
+    git checkout master         # back to master branch
+    git merge fix-branch        # fast forward the master branch
+    ```
 
   4. Delete temporary branch and back to working branch
 
-        git checkout -d fix-branch  # delete the fix-branch
-        git checkout branch-name    # back to working branch
+    ```bash
+    git checkout -d fix-branch  # delete the fix-branch
+    git checkout branch-name    # back to working branch
+    ```
 
 
   the fix is not in the branch-name. This could be done by
@@ -43,9 +53,11 @@
 
 - List branches
 
-      git branch      # lists the branches
-      git branch -a   # lists the branches (incl. remote)
-      git branch -v   # shows the last commit on each branch
+  ```bash
+  git branch      # lists the branches
+  git branch -a   # lists the branches (incl. remote)
+  git branch -v   # shows the last commit on each branch
+  ```
 
   `--merged` and `--no-merged` show which branches have been merged on the current
 
@@ -61,11 +73,15 @@ allows to re-create the branch. A branch name should be seen as a C-pointer. It 
 
 when a git merge ended in CONFLICT
 
-    git status # shows where the conflict lies
+```bash
+git status # shows where the conflict lies
+```
 
 fix the errors
 
-    git add file-which-conflicted.c
+```bash
+git add file-which-conflicted.c
+```
 
 alternatively one can use
 
@@ -81,8 +97,10 @@ There are various alternatives to do it. In particular to keep a nice history tr
 
 Checking out the file from another branch
 
-    git checkout branch file1 [file2 ...]
-    git commit -m "merge file1 from branch"
+```bash
+git checkout branch file1 [file2 ...]
+git commit -m "merge file1 from branch"
+```
 
 it should be noted that it somehow breaks the history (it is no merge, works more like a patch, which could also be an option). See 
 [How to merge specific files from another branch](http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/)
@@ -108,15 +126,19 @@ but then git consider the merge to be full and you cannot re-run merge to add th
 
 An alternative to achieve the same effect
 
-    git merge --no-ff --no-commit -s ours branch        # -s ours reject all modification, but mark the parenting
-    git checkout branch -- file
+```bash
+git merge --no-ff --no-commit -s ours branch        # -s ours reject all modification, but mark the parenting
+git checkout branch -- file
+```
 
 See also [How do you merge selective files with git](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/12613427#12613427).
 
 `git cherry-pick` and `git rebase -i` offer options when modifications on that file are in separate commits
 (ditto)
 
-    git cherry-pick <commit hash>     # apply the commit to the current branch (automatically commit)
+```bash
+git cherry-pick <commit hash>     # apply the commit to the current branch (automatically commit)
+```
 
 or even [split the commits](http://plasmasturm.org/log/530/).
 
@@ -153,17 +175,20 @@ if there is a branch named foo on the server, you will have a read only origin/f
 
 or
 
-    git checkout -b foo origin/foo # creates a local version of the foo branch which can be worked on
+```bash
+git checkout -b foo origin/foo # creates a local version of the foo branch which can be worked on
+```
 
 ### push
 
 Push a local branch to the remote
 
-    git push origin branch-name
-    git push origin --delete branch-name # does the same as git checkout -d branch-name but on the remote rep
+```bash
+git push origin branch-name
+git push origin --delete branch-name # does the same as git checkout -d branch-name but on the remote rep
+```
 
 ### pull
-
 
 `git pull` runs `git fetch` and `git merge origin/foo` ([Git fetch and merge](http://longair.net/blog/2009/04/16/git-fetch-and-merge/)).
 
@@ -174,10 +199,12 @@ due to my global setting of `--no-ff` and `--no-commit` for master branch, when 
 
 it stops before commiting. One way to clarify that would be 
 
-    git checkout tmp
-    git commit -am "results of pull"
-    git checkout master
-    git merge --ff --ff-only origin/master
+```bash
+git checkout tmp
+git commit -am "results of pull"
+git checkout master
+git merge --ff --ff-only origin/master
+```
 
 and you get back to the full remote tree with an extra commit, that you can forget about... which incidently has the same status as the origin/master
 
@@ -232,7 +259,9 @@ Good options for seeing conflicts:
 
 `git rebase` with more options
 
-    git rebase --interactive master # runs a rebase with some more options
+```bash
+git rebase --interactive master # runs a rebase with some more options
+```
 
 see also [Squash commits](http://davidwalsh.name/squash-commits-git):
 
@@ -241,7 +270,6 @@ see also [Squash commits](http://davidwalsh.name/squash-commits-git):
 will merge the branch into the current branch grouping its different commits into one ([Git merge](http://www.git-scm.com/docs/git-merge))
 
 ### git debugging
-
 
 [Ref. Debugging with git](http://git-scm.com/book/en/v2/Git-Tools-Debugging-with-Git)
 
@@ -252,18 +280,24 @@ checks who and when the lines from first to last of filename were edited
 `git bisect` help to go through versions to find out when a bug was introduced.
 using dichotomy and good/bad markers git helps to find the revision where a but was introduced. And then git prints info about the given revision.
 
-    git bisect start                    # starting bisect
-    git bisect bad                      # indicate that the current version is buggy
-    git bisect good <hash|version>      # indicate that a previous version is correct. It will jump directly to another version.
+```bash
+git bisect start                    # starting bisect
+git bisect bad                      # indicate that the current version is buggy
+git bisect good <hash|version>      # indicate that a previous version is correct. It will jump directly to another version.
+```
 
 repeat at each steps...
 
-    git bisect good                     # test/check and define good/bad. Each time, it checks out another version
-    git bisect bad
+```bash
+git bisect good                     # test/check and define good/bad. Each time, it checks out another version
+git bisect bad
+```
         
 ends with
 
-    git bisect reset                    # end the bisect and reset back HEAD to its original version
+```bash
+git bisect reset                    # end the bisect and reset back HEAD to its original version
+```
 
 Alternatively, one can use a script that checks directly. The script should return 0 if good and non-0 otherwise, one can do:
 
@@ -280,41 +314,55 @@ split a large git repo into individual smaller repos, see [Detach subdirectory](
 
 add a submodule
 
-    git clone project
-    cd project
-    git submodule add sm
-    git commit -am "added submodule sm"
+```bash
+git clone project
+cd project
+git submodule add sm
+git commit -am "added submodule sm"
+```
 
 one can also
 
-    git submodule add https://github.com/jmanoel7/vim-games.git plugins/vim-games
+```bash
+git submodule add https://github.com/jmanoel7/vim-games.git plugins/vim-games
+```
 
 clone a repo with a submodule
 
-    git clone project
-    cd project
-    git submodule init
-    git submodule update
+```bash
+git clone project
+cd project
+git submodule init
+git submodule update
+```
 
 or
 
-    git clone --recursive project
+```bash
+git clone --recursive project
+```
 
 update your SM repo
 
-    cd project/sm
-    git fetch
-    git merge origin/master
-    cd ..
-    git commit -am "sm actualised"
+```bash
+cd project/sm
+git fetch
+git merge origin/master
+cd ..
+git commit -am "sm actualised"
+```
 
 or
 
-    git submodule update --remote sm
+```bash
+git submodule update --remote sm
+```
 
 publish your submodule changes
 
-    git push --recurse-submodule=check
+```bash
+git push --recurse-submodule=check
+```
 
 it will do a push of project, but only after making sure that no local modification to sm need to be published
 
@@ -324,115 +372,133 @@ Example:
 
 - Create `repo1`
 
-      mkdir repo1
-      cd repo1
-      git init --bare
-      cd ..
+```bash
+mkdir repo1
+cd repo1
+git init --bare
+cd ..
+```
 
 - Add content
 
-      git clone repo1 repo1_loc
-      touch a
-      git add a
-      git commit -m "adding a"
-      git push origin master
-      cd ..
+```bash
+git clone repo1 repo1_loc
+touch a
+git add a
+git commit -m "adding a"
+git push origin master
+cd ..
+```
 
 - Create `repo2`
 
-      mkdir repo2
-      cd repo2
-      git init --bare
-      cd ..
+```bash
+mkdir repo2
+cd repo2
+git init --bare
+cd ..
+```
 
 - Add content
 
-      git clone repo2 repo2_loc
-      cd repo2_loc
-      touch b
-      git add b
-      git commit -m "adding b"
-      git submodule add $PWD/../repo1 repo1
-      git commit -m "submodule added"
-      git push origin master
-      cd ..
+```bash
+git clone repo2 repo2_loc
+cd repo2_loc
+touch b
+git add b
+git commit -m "adding b"
+git submodule add $PWD/../repo1 repo1
+git commit -m "submodule added"
+git push origin master
+cd ..
+```
 
 - Get another local copy of `repo2`
 
-      git clone repo2 loc
-      cd loc
-      git submodule init 
-      git submodule update
-      cd ..
+```bash
+git clone repo2 loc
+cd loc
+git submodule init 
+git submodule update
+cd ..
+```
 
 - Update `repo2` on loc
 
-      cd repo2_loc
-      touch c
-      git add c
-      git commit -m "adding c"
-      git push origin master
-      cd ../loc
-      git fetch origin
-      git merge --ff-only origin/master
-      cd ..
+```bash
+cd repo2_loc
+touch c
+git add c
+git commit -m "adding c"
+git push origin master
+cd ../loc
+git fetch origin
+git merge --ff-only origin/master
+cd ..
+```
 
 - Update `repo1` on loc
 
-      cd repo1_loc
-      touch d
-      git add d
-      git commit -m "adding d"
-      git push origin master
-      cd ../loc
-      cd repo1
-      git fetch --all
-      git merge --ff-only origin/master
-      cd ..
-      git add repo1
-      git commit -m "submodule update"
-      git push origin master
-      cd ..
+```bash
+cd repo1_loc
+touch d
+git add d
+git commit -m "adding d"
+git push origin master
+cd ../loc
+cd repo1
+git fetch --all
+git merge --ff-only origin/master
+cd ..
+git add repo1
+git commit -m "submodule update"
+git push origin master
+cd ..
+```
 
 - Modify `repo2` on loc and sync on `repo2_loc`
 
-      cd loc
-      touch e
-      git add e
-      git commit -m "adding e"
-      git push origin master
-      cd ..
-      cd repo2_loc
-      git pull --commit --ff-only origin master
-      git submodule update
-      cd ..
+```bash
+cd loc
+touch e
+git add e
+git commit -m "adding e"
+git push origin master
+cd ..
+cd repo2_loc
+git pull --commit --ff-only origin master
+git submodule update
+cd ..
+```
 
 - Modify `repo1` on loc and sync on `repo1_loc`, `repo2_loc`
 
-      cd loc
-      cd repo1
-      touch f
-      git add f
-      git commit -m "adding f"
-      git push origin master
-      cd ..
-      git add repo1
-      git commit -m "f added to sub"
-      git push origin master
-      cd ..
-      cd repo1_loc
-      git fetch --all 
-      git merge --ff-only origin/master
-      cd ..
-      cd repo2_loc
-      git fetch --all
-      git merge --ff-only origin/master
-      git submodule update
-      cd repo1
-      git checkout master
-      git merge --ff-only origin/master
-      cd ..
-      cd ..
+```bash
+cd loc
+cd repo1
+touch f
+git add f
+git commit -m "adding f"
+git push origin master
+cd ..
+git add repo1
+git commit -m "f added to sub"
+git push origin master
+cd ..
+cd repo1_loc
+git fetch --all 
+git merge --ff-only origin/master
+cd ..
+cd repo2_loc
+git fetch --all
+git merge --ff-only origin/master
+git submodule update
+cd repo1
+git checkout master
+git merge --ff-only origin/master
+cd ..
+cd ..
+```
 
 ### philosophy and issues
 
@@ -451,50 +517,64 @@ to ff or not to ff
 
 Tagging a commit
 
-    git tag v1.4-lw # lightweight tag
-    git tag -a v1.4 -m "version 1.4" # annotated tag
-    git tag -a v1.2 55646830 # tag the previous commit with hash 55646830
+```bash
+git tag v1.4-lw # lightweight tag
+git tag -a v1.4 -m "version 1.4" # annotated tag
+git tag -a v1.2 55646830 # tag the previous commit with hash 55646830
+```
 
 Sharing a tag
 
-    git push origin v1.5 # share the tag on the remote, alternatively
-    git push origin --tags # share all the tags
-    git checkout -b version2 v2.0.0 # creates the branch version2 which corresponds to the v2.0.0
+```bash
+git push origin v1.5 # share the tag on the remote, alternatively
+git push origin --tags # share all the tags
+git checkout -b version2 v2.0.0 # creates the branch version2 which corresponds to the v2.0.0
+```
 
 See [Basic tagging](http://git-scm.com/book/en/v2/Git-Basics-Tagging)
 
 Also in combination with describe:
 
-    echo hello > foo
-    git add foo
-    git commit -m "foo"
-    git tag -a v0.1 -m "first draft"
-    echo world >> foo
-    git commit -am "update 1"
-    echo "or not" >> foo
-    git commit -am "update 2"
-    git describe master # gives 'v0.1-2-g12fc6be' which is 2 commits since v0.1 and hash 'g12fc6be'
+```bash
+echo hello > foo
+git add foo
+git commit -m "foo"
+git tag -a v0.1 -m "first draft"
+echo world >> foo
+git commit -am "update 1"
+echo "or not" >> foo
+git commit -am "update 2"
+git describe master # gives 'v0.1-2-g12fc6be' which is 2 commits since v0.1 and hash 'g12fc6be'
+```
 
 List tags
 
-    git for-each-ref --sort="-taggerdate" --format="* %(color:yellow)%(object) %(color:white) %(taggerdate) [%(creator)] %(color:green) %(refname:short) %(color:red) %(subject)" refs/tags
+```bash
+git for-each-ref --sort="-taggerdate" --format="* %(color:yellow)%(object) %(color:white) %(taggerdate) [%(creator)] %(color:green) %(refname:short) %(color:red) %(subject)" refs/tags
+```
 
 Remove tag
 
-    git tag -d tagname
-    git tag --delete tagname
+```bash
+git tag -d tagname
+git tag --delete tagname
+```
 
 Remove remote tag
 
-    git push --delete origin tagname
+```bash
+git push --delete origin tagname
+```
 
 ### git reset
 
 
 can unstage changes
 
-    git reset HEAD filename # reverts the git add filename can undo the last commit and unstage the modifications
-    git reset HEAD~
+```bash
+git reset HEAD filename # reverts the git add filename can undo the last commit and unstage the modifications
+git reset HEAD~
+```
 
 Read
 - [Git reset](http://www.git-scm.com/docs/git-reset)
@@ -503,14 +583,16 @@ Read
 
 We have then
 
-    git commit -m "v2"
-    echo world >> a
-    git add a
-    git commit -m "v3"
+```bash
+git commit -m "v2"
+echo world >> a
+git add a
+git commit -m "v3"
 
-    git reset --soft  HEAD~ # undo the last commit, but leaves git add (staged)
-    git reset --mixed HEAD~ # undo commit and add but leaves world in a: [default]
-    git reset --hard  HEAD~ # reverts to the status after the commit v2
+git reset --soft  HEAD~ # undo the last commit, but leaves git add (staged)
+git reset --mixed HEAD~ # undo commit and add but leaves world in a: [default]
+git reset --hard  HEAD~ # reverts to the status after the commit v2
+```
 
 E.g. 
 
