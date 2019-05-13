@@ -1,15 +1,18 @@
-* delete all empty directories
-  ----------------------------
+# delete all empty directories
 
-    find . -type d -empty -delete
+```bash
+find . -type d -empty -delete
+```
 
-* look for soft links
-  -------------------
+# look for soft links
 
-    find . -type l
+```bash
+find . -type l
+```
 
-* Exclude path
-  ------------
+# Exclude path
 
-    for file in `find . -type f -not -path "*.git/*"`; do diff -q $file ~/.$file; done
+```bash
+for file in `find . -type f -not -path "*.git/*"`; do diff -q $file ~/.$file; done
+```
 
