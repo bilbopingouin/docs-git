@@ -61,6 +61,39 @@
 
   `--merged` and `--no-merged` show which branches have been merged on the current
 
+- remote tracking
+
+  We can check whether some local branch are set to track remote branch (as [How can I see which Git branches are tracking which remote / upstream branch?](https://stackoverflow.com/a/4952368/3337196))
+
+  ```bash
+  git branch -vv
+  ```
+
+  Set the tracking (see [Adding a tracking branch](https://githowto.com/adding_a_tracking_branch))
+
+  ```bash
+  git branch --track local_branch origin/remote_branch
+  ```
+
+  Remove tracking (see [](https://stackoverflow.com/a/3046478/3337196))
+
+  ```bash
+  git branch --unset-upstream
+  ```
+
+  or
+
+  ```bash
+  git branch -d -r origin/remote_branch
+  ```
+
+  Update all tracked branches
+
+  ```bash
+  git pull --all
+  ```
+
+
 See also [Basic Branching and Merging](http://www.git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging) and following pages.
 
 Note: If a branch is deleted, the "special" keyword which is a reference to that branch disappears. But the corresponding hash/commit still exist. Creating a branch with the same name is possible but will not have any link to the previous one. However running
