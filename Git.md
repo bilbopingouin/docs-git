@@ -1,6 +1,62 @@
 # Code revisioning with `git`
 
-### git branches
+### Table of content
+
+
+<!-- vim-markdown-toc GFM -->
+
+* [Branches](#branches)
+* [Merge conflicts](#merge-conflicts)
+* [Merge single file / partial merge](#merge-single-file--partial-merge)
+* [Origin and parallel updates](#origin-and-parallel-updates)
+* [Push](#push)
+* [Pull](#pull)
+* [Merge and rebase](#merge-and-rebase)
+* [Debugging](#debugging)
+* [Subtree](#subtree)
+* [Submodule](#submodule)
+* [Philosophy and issues](#philosophy-and-issues)
+* [Tag](#tag)
+* [Reset](#reset)
+* [Request-pull](#request-pull)
+* [Change history](#change-history)
+* [Recover data and garbage collector](#recover-data-and-garbage-collector)
+* [Tree visualisation](#tree-visualisation)
+* [Configuration](#configuration)
+* [Migrate a git repo](#migrate-a-git-repo)
+* [Removing a file from history](#removing-a-file-from-history)
+* [Split a repository](#split-a-repository)
+* [Merging two repositories](#merging-two-repositories)
+* [Cherry-pick](#cherry-pick)
+* [Patch](#patch)
+* [Rename a branch](#rename-a-branch)
+* [Install latest git](#install-latest-git)
+* [Orphaned commit](#orphaned-commit)
+* [Sync branches local/remote](#sync-branches-localremote)
+* [Gitolite: git on server](#gitolite-git-on-server)
+	* [Wild repo](#wild-repo)
+	* [List of available repos](#list-of-available-repos)
+	* [Rename repo](#rename-repo)
+	* [Rights](#rights)
+	* [Remote commands](#remote-commands)
+	* [Multiple keys](#multiple-keys)
+	* [Aliases/groups](#aliasesgroups)
+* [Hooks](#hooks)
+* [Prevent from pushing a local branch](#prevent-from-pushing-a-local-branch)
+* [Change origin url](#change-origin-url)
+* [Submodule merge into main repo](#submodule-merge-into-main-repo)
+* [Signed commits](#signed-commits)
+* [Notes](#notes)
+* [End-of-line](#end-of-line)
+* [Rewrite history](#rewrite-history)
+* [Merge taking always the remote](#merge-taking-always-the-remote)
+* [Diffs](#diffs)
+* [Tig](#tig)
+* [Stash](#stash)
+
+<!-- vim-markdown-toc -->
+
+### Branches
 
 - Cloning and getting to another branch
 
@@ -102,7 +158,7 @@ Note: If a branch is deleted, the "special" keyword which is a reference to that
 
 allows to re-create the branch. A branch name should be seen as a C-pointer. It gives a direct access to a given <hash>, which has not "memory" of where it was pointing to before.
 
-### merge conflicts
+### Merge conflicts
 
 when a git merge ended in CONFLICT
 
@@ -124,7 +180,7 @@ And then, in both cases
 
     git commit
 
-### git merge single file / partial merge
+### Merge single file / partial merge
 
 There are various alternatives to do it. In particular to keep a nice history tree.
 
@@ -190,7 +246,7 @@ See also
 - [Stashing](http://git-scm.com/book/en/v1/Git-Tools-Stashing)
 
 
-### origin and parallel updates
+### Origin and parallel updates
 
 Clone
 
@@ -212,7 +268,7 @@ or
 git checkout -b foo origin/foo # creates a local version of the foo branch which can be worked on
 ```
 
-### push
+### Push
 
 Push a local branch to the remote
 
@@ -221,7 +277,7 @@ git push origin branch-name
 git push origin --delete branch-name # does the same as git checkout -d branch-name but on the remote rep
 ```
 
-### pull
+### Pull
 
 `git pull` runs `git fetch` and `git merge origin/foo` ([Git fetch and merge](http://longair.net/blog/2009/04/16/git-fetch-and-merge/)).
 
@@ -245,7 +301,7 @@ alternatively one can run
 
     git pull --ff --commit
 
-### merge and rebase
+### Merge and rebase
 
 
 if we have the following
@@ -302,7 +358,7 @@ see also [Squash commits](http://davidwalsh.name/squash-commits-git):
 
 will merge the branch into the current branch grouping its different commits into one ([Git merge](http://www.git-scm.com/docs/git-merge))
 
-### git debugging
+### Debugging
 
 [Ref. Debugging with git](http://git-scm.com/book/en/v2/Git-Tools-Debugging-with-Git)
 
@@ -338,11 +394,11 @@ Alternatively, one can use a script that checks directly. The script should retu
     git bisect run test.sh
 
 
-### git subtree
+### Subtree
 
 split a large git repo into individual smaller repos, see [Detach subdirectory](https://stackoverflow.com/questions/359424/detach-subdirectory-into-separate-git-repository)
 
-### git submodule
+### Submodule
 
 
 add a submodule
@@ -405,135 +461,135 @@ Example:
 
 - Create `repo1`
 
-```bash
-mkdir repo1
-cd repo1
-git init --bare
-cd ..
-```
+  ```bash
+  mkdir repo1
+  cd repo1
+  git init --bare
+  cd ..
+  ```
 
 - Add content
 
-```bash
-git clone repo1 repo1_loc
-touch a
-git add a
-git commit -m "adding a"
-git push origin master
-cd ..
-```
+  ```bash
+  git clone repo1 repo1_loc
+  touch a
+  git add a
+  git commit -m "adding a"
+  git push origin master
+  cd ..
+  ```
 
 - Create `repo2`
 
-```bash
-mkdir repo2
-cd repo2
-git init --bare
-cd ..
-```
+  ```bash
+  mkdir repo2
+  cd repo2
+  git init --bare
+  cd ..
+  ```
 
 - Add content
 
-```bash
-git clone repo2 repo2_loc
-cd repo2_loc
-touch b
-git add b
-git commit -m "adding b"
-git submodule add $PWD/../repo1 repo1
-git commit -m "submodule added"
-git push origin master
-cd ..
-```
+  ```bash
+  git clone repo2 repo2_loc
+  cd repo2_loc
+  touch b
+  git add b
+  git commit -m "adding b"
+  git submodule add $PWD/../repo1 repo1
+  git commit -m "submodule added"
+  git push origin master
+  cd ..
+  ```
 
 - Get another local copy of `repo2`
 
-```bash
-git clone repo2 loc
-cd loc
-git submodule init 
-git submodule update
-cd ..
-```
+  ```bash
+  git clone repo2 loc
+  cd loc
+  git submodule init 
+  git submodule update
+  cd ..
+  ```
 
 - Update `repo2` on loc
 
-```bash
-cd repo2_loc
-touch c
-git add c
-git commit -m "adding c"
-git push origin master
-cd ../loc
-git fetch origin
-git merge --ff-only origin/master
-cd ..
-```
+  ```bash
+  cd repo2_loc
+  touch c
+  git add c
+  git commit -m "adding c"
+  git push origin master
+  cd ../loc
+  git fetch origin
+  git merge --ff-only origin/master
+  cd ..
+  ```
 
 - Update `repo1` on loc
 
-```bash
-cd repo1_loc
-touch d
-git add d
-git commit -m "adding d"
-git push origin master
-cd ../loc
-cd repo1
-git fetch --all
-git merge --ff-only origin/master
-cd ..
-git add repo1
-git commit -m "submodule update"
-git push origin master
-cd ..
-```
+  ```bash
+  cd repo1_loc
+  touch d
+  git add d
+  git commit -m "adding d"
+  git push origin master
+  cd ../loc
+  cd repo1
+  git fetch --all
+  git merge --ff-only origin/master
+  cd ..
+  git add repo1
+  git commit -m "submodule update"
+  git push origin master
+  cd ..
+  ```
 
 - Modify `repo2` on loc and sync on `repo2_loc`
 
-```bash
-cd loc
-touch e
-git add e
-git commit -m "adding e"
-git push origin master
-cd ..
-cd repo2_loc
-git pull --commit --ff-only origin master
-git submodule update
-cd ..
-```
+  ```bash
+  cd loc
+  touch e
+  git add e
+  git commit -m "adding e"
+  git push origin master
+  cd ..
+  cd repo2_loc
+  git pull --commit --ff-only origin master
+  git submodule update
+  cd ..
+  ```
 
 - Modify `repo1` on loc and sync on `repo1_loc`, `repo2_loc`
 
-```bash
-cd loc
-cd repo1
-touch f
-git add f
-git commit -m "adding f"
-git push origin master
-cd ..
-git add repo1
-git commit -m "f added to sub"
-git push origin master
-cd ..
-cd repo1_loc
-git fetch --all 
-git merge --ff-only origin/master
-cd ..
-cd repo2_loc
-git fetch --all
-git merge --ff-only origin/master
-git submodule update
-cd repo1
-git checkout master
-git merge --ff-only origin/master
-cd ..
-cd ..
-```
+  ```bash
+  cd loc
+  cd repo1
+  touch f
+  git add f
+  git commit -m "adding f"
+  git push origin master
+  cd ..
+  git add repo1
+  git commit -m "f added to sub"
+  git push origin master
+  cd ..
+  cd repo1_loc
+  git fetch --all 
+  git merge --ff-only origin/master
+  cd ..
+  cd repo2_loc
+  git fetch --all
+  git merge --ff-only origin/master
+  git submodule update
+  cd repo1
+  git checkout master
+  git merge --ff-only origin/master
+  cd ..
+  cd ..
+  ```
 
-### philosophy and issues
+### Philosophy and issues
 
 Read the following
 - [Ref.](http://www.randyfay.com/node/89)
@@ -546,7 +602,7 @@ to ff or not to ff
 - [Fast forward](http://ariya.ofilabs.com/2013/09/fast-forward-git-merge.html)
 - [Why does git fast forward merges by default](https://stackoverflow.com/questions/2850369/why-does-git-fast-forward-merges-by-default/2850413#2850413)
 
-### git tag
+### Tag
 
 Tagging a commit
 
@@ -599,7 +655,7 @@ Remove remote tag
 git push --delete origin tagname
 ```
 
-### git reset
+### Reset
 
 
 can unstage changes
@@ -631,47 +687,53 @@ E.g.
 
 - Creating a directory with last modification
 
-      git init
-      touch a
-      git add a
-      git commit -m "Creating file a"
-      echo foo >> a
-      git add a
-      git commit -m "foo in a"
-      echo bar >> a
-      git add a
-      git commit -m "bar in a"
+  ```bash
+  git init
+  touch a
+  git add a
+  git commit -m "Creating file a"
+  echo foo >> a
+  git add a
+  git commit -m "foo in a"
+  echo bar >> a
+  git add a
+  git commit -m "bar in a"
+  ```
         
 - Situation
 
-      git status
-            On branch master
-            nothing to commit, working tree clean
+  ```bash
+  git status
+     On branch master
+     nothing to commit, working tree clean
 
-      git --no-pager tree
-          * 65fc7f4 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - bar in a
-            * e0e202f 2018-09-11 [Tudi Le Bleis, N] - foo in a
-            * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
+  git --no-pager tree
+     * 65fc7f4 2018-09-11 (HEAD -> master) [bilbopingouin, N] - bar in a
+     * e0e202f 2018-09-11 [bilbopingouin, N] - foo in a
+     * 697194d 2018-09-11 [bilbopingouin, N] - Creating file a
 
-      cat a
-            foo
-            bar
+  cat a
+     foo
+     bar
+  ```
             
 - Effect of `git reset --soft HEAD~`
 
-      git status
-            On branch master
-            Changes to be committed:
-                (use "git reset HEAD <file>..." to unstage)
+  ```bash
+  git status
+	On branch master
+	Changes to be committed:
+	    (use "git reset HEAD <file>..." to unstage)
 
-                  modified:   a
-      git --no-pager tree
-          * e0e202f 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - foo in a
-          * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
+	      modified:   a
+  git --no-pager tree
+      * e0e202f 2018-09-11 (HEAD -> master) [bilbopingouin, N] - foo in a
+      * 697194d 2018-09-11 [bilbopingouin, N] - Creating file a
 
-      cat a
-            foo
-            bar
+  cat a
+	foo
+	bar
+  ```
             
  - Effect of `git reset --mixed HEAD~`
 
@@ -683,8 +745,8 @@ E.g.
 
                   modified:   a
       git --no-pager tree
-          * e0e202f 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - foo in a
-          * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
+          * e0e202f 2018-09-11 (HEAD -> master) [bilbopingouin, N] - foo in a
+          * 697194d 2018-09-11 [bilbopingouin, N] - Creating file a
 
       cat a
             foo
@@ -692,16 +754,18 @@ E.g.
             
 - Effect of `git reset --hard HEAD~`
 
-      git status
-            On branch master
-            nothing to commit, working tree clean
+  ```bash
+  git status
+	On branch master
+	nothing to commit, working tree clean
 
-      git --no-pager tree
-          * e0e202f 2018-09-11 (HEAD -> master) [Tudi Le Bleis, N] - foo in a
-            * 697194d 2018-09-11 [Tudi Le Bleis, N] - Creating file a
+  git --no-pager tree
+      * e0e202f 2018-09-11 (HEAD -> master) [bilbopingouin, N] - foo in a
+      * 697194d 2018-09-11 [bilbopingouin, N] - Creating file a
 
-      cat a
-            foo
+  cat a
+	foo
+  ```
             
 Instead of calling with `HEAD~`, calling reset HEAD does:
 - `--soft`: nothing
@@ -724,7 +788,7 @@ revert last commit local and remote
     git push --force  # One should be careful that no one has synchronised their copy! 
 
 
-### git request-pull
+### Request-pull
 
 
 prints out a summary of the changes between your branch and another branch.
@@ -773,7 +837,7 @@ Change the author name
 
     git commit --amend --author="New Name <email@example.com>"
 
-### recover data and garbage collector
+### Recover data and garbage collector
 
 Calling the garbage collector
 
@@ -781,7 +845,7 @@ Calling the garbage collector
 
 See also [Maintainance and data recovery](http://www.git-scm.com/book/en/v2/Git-Internals-Maintenance-and-Data-Recovery).
 
-### tree visualisation
+### Tree visualisation
 
 
 built-in
@@ -815,7 +879,7 @@ alternative: `gitk`
 
 (GUI)
 
-### configuration
+### Configuration
 
 Configuration can be done on a local scale (repo only) or global scale (all projects)
 
@@ -863,7 +927,7 @@ When having personal repo in a work environment, it might be a good idea to have
     git config --local user.email "bob@email.me"
 
 
-### migrate a git repo
+### Migrate a git repo
 
 Use the following
 
@@ -886,7 +950,7 @@ IIt can be done as
     git gc --aggressive --prune=now
 
 
-### split a repository
+### Split a repository
 
 If we have a structure like
 
@@ -955,7 +1019,7 @@ see also:
 - [Splitting a subfolder out into a new repository](https://help.github.com/articles/splitting-a-subfolder-out-into-a-new-repository/)
 - [When to break up a large git repository into smaller ones](https://stackoverflow.com/questions/21941068/when-to-break-up-a-large-git-repository-into-smaller-ones)
 
-### merging two repositories
+### Merging two repositories
 
 
 we have two repositories
@@ -1012,7 +1076,7 @@ See also:
 - [Merging two git repositories into one repository without losing file history](http://saintgimp.org/2013/01/22/merging-two-git-repositories-into-one-repository-without-losing-file-history/)
 - [How can I rewrite history so that all files are in a subdirectory](https://stackoverflow.com/questions/4042816/how-can-i-rewrite-history-so-that-all-files-are-in-a-subdirectory)
 
-### git cherry-pick
+### Cherry-pick
 
 
 reproduces a given commit (like rebase for a single commit)
@@ -1048,7 +1112,7 @@ See also
 - [Cherry pick](http://wiki.koha-community.org/wiki/Using_Git_Cherry_Pick)
 - [How od you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/449632#449632)
 
-### patch
+### Patch
 
 A patch can be generated...
 
@@ -1105,7 +1169,7 @@ See also
 - [git-am](http://git-scm.com/docs/git-am)
 
 
-### Rename a branch                                                                                                                                                                                                
+### Rename a branch
 
 a local branch:
 
@@ -1129,7 +1193,7 @@ See
 - [Rename a remote branch on github](http://blog.changecong.com/2012/10/rename-a-remote-branch-on-github/)
 - [Rename master branch for both local and remote git repositories](https://stackoverflow.com/questions/1526794/rename-master-branch-for-both-local-and-remote-git-repositories/1527004#1527004)
 
-### install latest git
+### Install latest git
 
 There are various ways to achieve it.
 
@@ -1174,7 +1238,7 @@ There are various ways to achieve it.
         sudo echo -e "#\!/bin/bash\\n/usr/local/bin/git \$*" > /usr/local/bin/git-2.3
         sudo chmod +x /usr/local/bin/git-2.3
 
-### git orphaned commit
+### Orphaned commit
 
 
 when doing
@@ -1230,7 +1294,7 @@ I can use that to find the hash of a lost commit point to the branch which shoul
 
     git reset --hard <HASH>
 
-### git sync branches local/remote
+### Sync branches local/remote
 
 List branches
 
@@ -1264,7 +1328,7 @@ See
 - [How do you delete a remote branch properly](https://stackoverflow.com/questions/5183051/how-do-you-delete-a-remote-git-branch-properly-a-k-a-updating-the-remote-bra#5183258)
 - [Differences between git remote update and fetch](https://stackoverflow.com/questions/1856499/differences-between-git-remote-update-and-fetch)
 
-### gitolite: git on server
+### Gitolite: git on server
 
 See
 - [Git on the server: gitolite](http://www.git-scm.com/book/en/v1/Git-on-the-Server-Gitolite)
@@ -1272,7 +1336,7 @@ See
 - [user view](http://gitolite.com/gitolite/user.html#pers)
 - [wild repo](http://gitolite.com/gitolite/wild.html)
 
-#### Wild repo:
+#### Wild repo
 
 in gitolite conf:
 
@@ -1391,7 +1455,7 @@ Alice and Bob have `RW+` rights on `proj1`
 Alice and Carl have `RW+` rights on `proj2`, but Bob still has `R` rights.
 
 
-### git hooks
+### Hooks
 
 
 `hooks` are scripts that can be run when some `git` commands are run. This allows, e.g., to enforce some policy on push. But it can also force a formatting in commit messaged or further tasks.
@@ -1530,7 +1594,7 @@ cat update_git.sh
     git clone --template=path/to/original/.git path/to/original
 
 
-### prevent from pushing a local branch
+### Prevent from pushing a local branch
 
 
 In `.git/hooks/pre-push` we can write
@@ -1561,7 +1625,7 @@ That way, any branch within that local repository named `local` or `local/*` wil
 
 See also how to get the hook as a [global setting](https://stackoverflow.com/questions/2293498/git-commit-hooks-global-settings).
 
-### change origin url
+### Change origin url
 
 
 Test remote url:
@@ -1576,7 +1640,7 @@ Change/Update the url
 
     git remote set-url origin git@gitserver:prj
 
-### git submodule merge into main repo
+### Submodule merge into main repo
 
 
 See the [SO reference](https://stackoverflow.com/questions/1759587/un-submodule-a-git-submodule).
@@ -1654,7 +1718,7 @@ Sign tag
 
 using -s instead of -a
 
-### Git notes
+### Notes
 
 Reference: [Notes](https://git-scm.com/2010/08/25/notes.html).
 
@@ -1697,7 +1761,7 @@ On OSX or Linux, better
 
 But some other options can be considered as indicated in the links above.
 
-### rewrite history
+### Rewrite history
 
 To modify the history (are you sure?), one can do
 
@@ -1712,7 +1776,7 @@ If the commits were already shared (pushed), that might create some issues and t
 
 See [How to modify a specified commit in git](https://stackoverflow.com/questions/1186535/how-to-modify-a-specified-commit-in-git#1186549)
 
-### merge taking always the remote
+### Merge taking always the remote
 
 Running
 
@@ -1737,7 +1801,7 @@ Ignore the whitespaces
 
 See also [Ignore all whitespace changes with git diff between commits](https://stackoverflow.com/questions/33159394/ignore-all-whitespace-changes-with-git-diff-between-commits)
 
-### tig
+### Tig
 
 References
 - [Tig](https://jonas.github.io/tig)
@@ -1813,7 +1877,7 @@ Some configuration can be placed into a `~/.tigrc` file ([tigrc manual](https://
 
     set main-view-id = display:true
 
-### stash
+### Stash
 
 
 Save modifications as temporary "commit"
