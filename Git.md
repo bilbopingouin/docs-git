@@ -15,6 +15,12 @@
 * [Debugging](#debugging)
 * [Subtree](#subtree)
 * [Submodule](#submodule)
+	* [add a submodule](#add-a-submodule)
+	* [clone a repo with a submodule](#clone-a-repo-with-a-submodule)
+	* [update your SM repo](#update-your-sm-repo)
+	* [publish your submodule changes](#publish-your-submodule-changes)
+	* [Example:](#example)
+	* [Recursive status/commit](#recursive-statuscommit)
 * [Philosophy and issues](#philosophy-and-issues)
 * [Tag](#tag)
 * [Reset](#reset)
@@ -401,7 +407,7 @@ split a large git repo into individual smaller repos, see [Detach subdirectory](
 ### Submodule
 
 
-add a submodule
+#### add a submodule
 
 ```bash
 git clone project
@@ -416,7 +422,7 @@ one can also
 git submodule add https://github.com/jmanoel7/vim-games.git plugins/vim-games
 ```
 
-clone a repo with a submodule
+#### clone a repo with a submodule
 
 ```bash
 git clone project
@@ -431,7 +437,7 @@ or
 git clone --recursive project
 ```
 
-update your SM repo
+#### update your SM repo
 
 ```bash
 cd project/sm
@@ -447,7 +453,7 @@ or
 git submodule update --remote sm
 ```
 
-publish your submodule changes
+#### publish your submodule changes
 
 ```bash
 git push --recurse-submodule=check
@@ -457,7 +463,7 @@ it will do a push of project, but only after making sure that no local modificat
 
 See [Submodules](http://www.git-scm.com/book/en/v2/Git-Tools-Submodules)
 
-Example:
+#### Example:
 
 - Create `repo1`
 
@@ -588,6 +594,22 @@ Example:
   cd ..
   cd ..
   ```
+
+#### Recursive status/commit
+
+The status of all submodules can be found as
+
+```vim
+git submodule foreach git status
+```
+
+And a commit can be done as
+
+```vim
+git submodule foreach 'if [ -n "$(git status --porcelain)" ]; then git commit -am "Some message"; fi'
+```
+
+will run commit on all submodules, only if they are not clean.
 
 ### Philosophy and issues
 
