@@ -599,13 +599,13 @@ See [Submodules](http://www.git-scm.com/book/en/v2/Git-Tools-Submodules)
 
 The status of all submodules can be found as
 
-```vim
+```bash
 git submodule foreach git status
 ```
 
 And a commit can be done as
 
-```vim
+```bash
 git submodule foreach 'if [ -n "$(git status --porcelain)" ]; then git commit -am "Some message"; fi'
 ```
 
