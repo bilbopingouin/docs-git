@@ -1183,9 +1183,29 @@ Conflicts
 
 but it is not working if the original does not exist when the conflict is resolved
 
-  git am --continue # as indicated
+    git am --continue # as indicated
 
-See also
+If a series of patches was generated, and we want to apply all of them but keeping each their own commit
+
+    git am *.patch
+
+See [how to apply multiple git patches in one shot](https://stackoverflow.com/questions/18494750/how-to-apply-multiple-git-patches-in-one-shot).
+
+Sometimes, when applying a patch, there are errors, because the target files have been changed in compare to what the patch was expecting. This can be illustrated using
+
+    git apply --reject --whitespace=fix file.patch
+
+any file error would appear as `filename.rej`. One can use `wiggle` to try to force applying the patch as
+
+    wiggle --replace file file.rej
+
+Once all the errors have been fixed
+
+    git status
+    git add modified_files
+    git am --continue
+
+Further information on
 - [Email](http://git-scm.com/book/en/v2/Git-Commands-Email)
 - [Maintaining a project: git am](http://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project#_git_am)
 - [git-am](http://git-scm.com/docs/git-am)
