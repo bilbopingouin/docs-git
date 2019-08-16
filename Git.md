@@ -6,6 +6,12 @@
 <!-- vim-markdown-toc GFM -->
 
 * [Branches](#branches)
+	* [Cloning](#cloning)
+	* [Merge a fix](#merge-a-fix)
+	* [List branches](#list-branches)
+	* [Remote Tracking](#remote-tracking)
+	* [Rename a branch](#rename-a-branch)
+	* [Further](#further)
 * [Origin and remote updates](#origin-and-remote-updates)
 * [Push](#push)
 * [Pull](#pull)
@@ -44,7 +50,6 @@
 * [Tree visualisation](#tree-visualisation)
 * [Configuration](#configuration)
 * [Migrate a git repo](#migrate-a-git-repo)
-* [Rename a branch](#rename-a-branch)
 * [Install latest git](#install-latest-git)
 * [Orphaned commit](#orphaned-commit)
 * [Sync branches local/remote](#sync-branches-localremote)
@@ -68,103 +73,142 @@
 
 ### Branches
 
-- Cloning and getting to another branch
+#### Cloning
+
+Cloning and getting to another branch
+
+```bash
+git clone me@server:repo
+git checkout -b branch-name
+```
+
+now working on another branch with the name branch-name can do git commit, push, etc.
+
+#### Merge a fix
+
+Receive info that a fix has come.
+
+1. Switching back to master:
 
   ```bash
-  git clone me@server:repo
-  git checkout -b branch-name
+  git checkout master
   ```
 
-  now working on another branch with the name branch-name can do git commit, push, etc.
-
-- Receive info that a fix has come.
-
-  1. Switching back to master:
-
-    ```bash
-    git checkout master
-    ```
-
-  2. Creating a new branch
-
-    ```bash
-     git checkout -b fix-branch v0.1
-     #change everything one needs
-     git commit -a -m "fixed!"
-     ```
-
-  3. Merge new branch into master
-
-    ```bash
-    git checkout master         # back to master branch
-    git merge fix-branch        # fast forward the master branch
-    ```
-
-  4. Delete temporary branch and back to working branch
-
-    ```bash
-    git checkout -d fix-branch  # delete the fix-branch
-    git checkout branch-name    # back to working branch
-    ```
-
-
-  the fix is not in the branch-name. This could be done by
-
-      git merge master
-
-  or the branch-name later in master as
-
-      git checkout master
-      git merge branch-name
-
-- List branches
+2. Creating a new branch
 
   ```bash
-  git branch      # lists the branches
-  git branch -a   # lists the branches (incl. remote)
-  git branch -v   # shows the last commit on each branch
-  ```
+   git checkout -b fix-branch v0.1
+   #change everything one needs
+   git commit -a -m "fixed!"
+   ```
 
-  `--merged` and `--no-merged` show which branches have been merged on the current
-
-- remote tracking
-
-  We can check whether some local branch are set to track remote branch (as [How can I see which Git branches are tracking which remote / upstream branch?](https://stackoverflow.com/a/4952368/3337196))
+3. Merge new branch into master
 
   ```bash
-  git branch -vv
+  git checkout master         # back to master branch
+  git merge fix-branch        # fast forward the master branch
   ```
 
-  Set the tracking (see [Adding a tracking branch](https://githowto.com/adding_a_tracking_branch))
+4. Delete temporary branch and back to working branch
 
   ```bash
-  git branch --track local_branch origin/remote_branch
+  git checkout -d fix-branch  # delete the fix-branch
+  git checkout branch-name    # back to working branch
   ```
 
-  Remove tracking (see [](https://stackoverflow.com/a/3046478/3337196))
 
-  ```bash
-  git branch --unset-upstream
-  ```
+the fix is not in the branch-name. This could be done by
 
-  or
+```bash
+git merge master
+```
 
-  ```bash
-  git branch -d -r origin/remote_branch
-  ```
+or the branch-name later in master as
 
-  Update all tracked branches
+```bash
+git checkout master
+git merge branch-name
+```
 
-  ```bash
-  git pull --all
-  ```
+#### List branches
 
+```bash
+git branch      # lists the branches
+git branch -a   # lists the branches (incl. remote)
+git branch -v   # shows the last commit on each branch
+```
+
+`--merged` and `--no-merged` show which branches have been merged on the current
+
+#### Remote Tracking
+
+ We can check whether some local branch are set to track remote branch (as [How can I see which Git branches are tracking which remote / upstream branch?](https://stackoverflow.com/a/4952368/3337196))
+
+ ```bash
+ git branch -vv
+ ```
+
+ Set the tracking (see [Adding a tracking branch](https://githowto.com/adding_a_tracking_branch))
+
+ ```bash
+ git branch --track local_branch origin/remote_branch
+ ```
+
+ Remove tracking (see [](https://stackoverflow.com/a/3046478/3337196))
+
+ ```bash
+ git branch --unset-upstream
+ ```
+
+ or
+
+ ```bash
+ git branch -d -r origin/remote_branch
+ ```
+
+ Update all tracked branches
+
+ ```bash
+ git pull --all
+ ```
+
+#### Rename a branch
+
+a local branch:
+
+ ```bash
+ git branch -m oldname newname
+ ```
+
+or
+
+    git branch -m newname # rename current branch
+
+See [Rename local git branch](https://stackoverflow.com/questions/6591213/rename-local-git-branch#6591218).
+
+a remote branch:
+
+ ```bash
+ git branch -m br1 br2
+ git push origin :br1 # deletes remote branch
+ git push origin br2
+ ```
+
+and another `br1` may be created. But careful with possible other versions of `br1` checked out
+
+See
+- [Rename a remote branch on github](http://blog.changecong.com/2012/10/rename-a-remote-branch-on-github/)
+- [Rename master branch for both local and remote git repositories](https://stackoverflow.com/questions/1526794/rename-master-branch-for-both-local-and-remote-git-repositories/1527004#1527004)
+
+#### Further
 
 See also [Basic Branching and Merging](http://www.git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging) and following pages.
 
 Note: If a branch is deleted, the "special" keyword which is a reference to that branch disappears. But the corresponding hash/commit still exist. Creating a branch with the same name is possible but will not have any link to the previous one. However running
 
-    git checkout -b branch <hash>
+```bash
+git checkout -b branch <hash>
+```
 
 allows to re-create the branch. A branch name should be seen as a C-pointer. It gives a direct access to a given <hash>, which has not "memory" of where it was pointing to before.
 
@@ -1428,30 +1472,6 @@ Use the following
     for remote in `git branch -r | grep -v master `; do git checkout --track $remote ; done
     git remote add server2 git@server2:project
     git push server2 --mirror
-
-### Rename a branch
-
-a local branch:
-
-    git branch -m oldname newname
-
-or
-
-    git branch -m newname # rename current branch
-
-See [Rename local git branch](https://stackoverflow.com/questions/6591213/rename-local-git-branch#6591218).
-
-a remote branch:
-
-    git branch -m br1 br2
-    git push origin :br1 # deletes remote branch
-    git push origin br2
-
-and another `br1` may be created. But careful with possible other versions of `br1` checked out
-
-See
-- [Rename a remote branch on github](http://blog.changecong.com/2012/10/rename-a-remote-branch-on-github/)
-- [Rename master branch for both local and remote git repositories](https://stackoverflow.com/questions/1526794/rename-master-branch-for-both-local-and-remote-git-repositories/1527004#1527004)
 
 ### Install latest git
 
