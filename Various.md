@@ -219,6 +219,14 @@ some commands
 `xargs` can be faster than `-exec` when a lot of files are involved since the right-hand side command is called only once instead of for each argument
 avoid too long list of files 'arguments list too long'
 
+It is also possible to extract some data like
+
+```bash
+echo "/path/to/file.cc | xargs -1 basename 
+```
+
+which returns `file.cc`.
+
 some references
 - [Xargs - wikipedia](https://en.wikipedia.org/wiki/Xargs)
 - [xargs construct argument lists utility](http://www.cyberciti.biz/faq/linux-unix-bsd-xargs-construct-argument-lists-utility/)

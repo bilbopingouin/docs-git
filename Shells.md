@@ -1,4 +1,15 @@
-# Comparison
+# Shell
+
+
+<!-- vim-markdown-toc GFM -->
+
+* [Comparison](#comparison)
+* [brace expansion](#brace-expansion)
+* [Intro to ZSH](#intro-to-zsh)
+
+<!-- vim-markdown-toc -->
+
+### Comparison
 
 
 - exhaustive feature comparison between different unix shells [Unix Shells](http://hyperpolyglot.org/unix-shells),
@@ -6,7 +17,7 @@
 - A collection of tops and tricks for zsh [zsh lovers](http://grml.org/zsh/zsh-lovers).
 
 
-# brace expansion
+### brace expansion
 
 ```bash
 $ bash -c 'echo {a..z}'
@@ -28,7 +39,7 @@ $ echo {a-z}
   a b c d e f g h i j k l m n o p q r s t u v w x y z
 ```
 
-# Intro to ZSH
+### Intro to ZSH
 
 - features and intro zsh [intro toc](http://zsh.sourceforge.net/Intro/intro_toc.html)
 - reference card [refcard](http://www.bash2zsh.com/zsh_refcard/refcard.pdf)
