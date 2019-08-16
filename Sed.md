@@ -24,7 +24,7 @@ The `-i` stands for in-place.
 sed -n '5,10p;11q' file
 ```
 
-It is also possible to useo
+It is also possible to use
 ```bash
 sed -n '\cpatternc,10p;11q' file
 ```

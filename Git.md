@@ -6,11 +6,11 @@
 <!-- vim-markdown-toc GFM -->
 
 * [Branches](#branches)
-* [Merge conflicts](#merge-conflicts)
-* [Merge single file / partial merge](#merge-single-file--partial-merge)
-* [Origin and parallel updates](#origin-and-parallel-updates)
+* [Origin and remote updates](#origin-and-remote-updates)
 * [Push](#push)
 * [Pull](#pull)
+* [Diffs](#diffs)
+* [Merge conflicts](#merge-conflicts)
 * [Merge and rebase](#merge-and-rebase)
 * [Debugging](#debugging)
 * [Subtree](#subtree)
@@ -21,24 +21,39 @@
 	* [publish your submodule changes](#publish-your-submodule-changes)
 	* [Example:](#example)
 	* [Recursive status/commit](#recursive-statuscommit)
-* [Philosophy and issues](#philosophy-and-issues)
+* [Stash](#stash)
 * [Tag](#tag)
 * [Reset](#reset)
+* [Cherry-pick](#cherry-pick)
+* [Patch](#patch)
+* [Hooks](#hooks)
+* [Notes](#notes)
 * [Request-pull](#request-pull)
+* [Philosophy and issues](#philosophy-and-issues)
 * [Change history](#change-history)
+	* [Edit last commit](#edit-last-commit)
+	* [Edit earlier commit](#edit-earlier-commit)
+	* [Discard modifications](#discard-modifications)
+	* [Merge correction](#merge-correction)
+	* [Author name](#author-name)
+* [Removing a file from history](#removing-a-file-from-history)
+* [Split a repository](#split-a-repository)
+* [Merging two repositories](#merging-two-repositories)
+* [Submodule merge into main repo](#submodule-merge-into-main-repo)
 * [Recover data and garbage collector](#recover-data-and-garbage-collector)
 * [Tree visualisation](#tree-visualisation)
 * [Configuration](#configuration)
 * [Migrate a git repo](#migrate-a-git-repo)
-* [Removing a file from history](#removing-a-file-from-history)
-* [Split a repository](#split-a-repository)
-* [Merging two repositories](#merging-two-repositories)
-* [Cherry-pick](#cherry-pick)
-* [Patch](#patch)
 * [Rename a branch](#rename-a-branch)
 * [Install latest git](#install-latest-git)
 * [Orphaned commit](#orphaned-commit)
 * [Sync branches local/remote](#sync-branches-localremote)
+* [Prevent from pushing a local branch](#prevent-from-pushing-a-local-branch)
+* [Change origin url](#change-origin-url)
+* [Signed commits](#signed-commits)
+* [End-of-line](#end-of-line)
+* [Merge taking always the remote](#merge-taking-always-the-remote)
+* [Merge single file / partial merge](#merge-single-file--partial-merge)
 * [Gitolite: git on server](#gitolite-git-on-server)
 	* [Wild repo](#wild-repo)
 	* [List of available repos](#list-of-available-repos)
@@ -47,18 +62,7 @@
 	* [Remote commands](#remote-commands)
 	* [Multiple keys](#multiple-keys)
 	* [Aliases/groups](#aliasesgroups)
-* [Hooks](#hooks)
-* [Prevent from pushing a local branch](#prevent-from-pushing-a-local-branch)
-* [Change origin url](#change-origin-url)
-* [Submodule merge into main repo](#submodule-merge-into-main-repo)
-* [Signed commits](#signed-commits)
-* [Notes](#notes)
-* [End-of-line](#end-of-line)
-* [Rewrite history](#rewrite-history)
-* [Merge taking always the remote](#merge-taking-always-the-remote)
-* [Diffs](#diffs)
 * [Tig](#tig)
-* [Stash](#stash)
 
 <!-- vim-markdown-toc -->
 
@@ -164,95 +168,7 @@ Note: If a branch is deleted, the "special" keyword which is a reference to that
 
 allows to re-create the branch. A branch name should be seen as a C-pointer. It gives a direct access to a given <hash>, which has not "memory" of where it was pointing to before.
 
-### Merge conflicts
-
-when a git merge ended in CONFLICT
-
-```bash
-git status # shows where the conflict lies
-```
-
-fix the errors
-
-```bash
-git add file-which-conflicted.c
-```
-
-alternatively one can use
-
-    git mergetool
-
-And then, in both cases
-
-    git commit
-
-### Merge single file / partial merge
-
-There are various alternatives to do it. In particular to keep a nice history tree.
-
-Checking out the file from another branch
-
-```bash
-git checkout branch file1 [file2 ...]
-git commit -m "merge file1 from branch"
-```
-
-it should be noted that it somehow breaks the history (it is no merge, works more like a patch, which could also be an option). See 
-[How to merge specific files from another branch](http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/)
-This could still be marked by using
-
-    git merge branch -s ours 
-
-which will create a new commit, but without changing anything to the content.
-
-Another way is to run
-
-    git merge --no-ff --no-commit branch
-
-Reject updates by
-
-    git checkout HEAD^ file
-
-or
-
-    git reset HEAD^ file
-
-but then git consider the merge to be full and you cannot re-run merge to add the missing files ([How do you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/7292109#7292109)).
-
-An alternative to achieve the same effect
-
-```bash
-git merge --no-ff --no-commit -s ours branch        # -s ours reject all modification, but mark the parenting
-git checkout branch -- file
-```
-
-See also [How do you merge selective files with git](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/12613427#12613427).
-
-`git cherry-pick` and `git rebase -i` offer options when modifications on that file are in separate commits
-(ditto)
-
-```bash
-git cherry-pick <commit hash>     # apply the commit to the current branch (automatically commit)
-```
-
-or even [split the commits](http://plasmasturm.org/log/530/).
-
-another alternative is to use
-
-    git checkout branch file
-    git stash
-    git merge stash
-
-this gives some information that the version from file is merged from somewhere and can be followed by
-
-    git merge branch
-
-See also
-- [How do you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/7184182#7184182)
-- [Stashing](http://git-scm.com/book/en/v1/Git-Tools-Stashing)
-
-
-### Origin and parallel updates
+### Origin and remote updates
 
 Clone
 
@@ -306,6 +222,45 @@ and you get back to the full remote tree with an extra commit, that you can forg
 alternatively one can run
 
     git pull --ff --commit
+
+### Diffs
+
+
+Only show the list of files that differ
+
+    git diff --name-only branch
+
+Use no pager
+
+    git --no-pager diff --name-only branch
+
+Ignore the whitespaces
+
+    git diff -w <commit>
+
+See also [Ignore all whitespace changes with git diff between commits](https://stackoverflow.com/questions/33159394/ignore-all-whitespace-changes-with-git-diff-between-commits)
+
+### Merge conflicts
+
+when a git merge ended in CONFLICT
+
+```bash
+git status # shows where the conflict lies
+```
+
+fix the errors
+
+```bash
+git add file-which-conflicted.c
+```
+
+alternatively one can use
+
+    git mergetool
+
+And then, in both cases
+
+    git commit
 
 ### Merge and rebase
 
@@ -611,18 +566,29 @@ git submodule foreach 'if [ -n "$(git status --porcelain)" ]; then git commit -a
 
 will run commit on all submodules, only if they are not clean.
 
-### Philosophy and issues
+### Stash
 
-Read the following
-- [Ref.](http://www.randyfay.com/node/89)
-- [Git workflow](https://sandofsky.com/blog/git-workflow.html)
-- [Workflows](https://www.atlassian.com/zh/git/workflows)
-- [Maintaining a project](http://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project)
-- [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
-to ff or not to ff
-- [Fast forward](http://ariya.ofilabs.com/2013/09/fast-forward-git-merge.html)
-- [Why does git fast forward merges by default](https://stackoverflow.com/questions/2850369/why-does-git-fast-forward-merges-by-default/2850413#2850413)
+Save modifications as temporary "commit"
+
+    git stash
+
+List temps
+
+    git stash list
+
+Edit the stash
+
+    git stash pop [<stash>]
+    git stash apply [<stash>]
+
+Discard the last stash 
+
+    git stash drop [<stash>]
+
+Make a branch out of a stash
+
+    git stash branch branchname
 
 ### Tag
 
@@ -810,6 +776,282 @@ revert last commit local and remote
     git push --force  # One should be careful that no one has synchronised their copy! 
 
 
+### Cherry-pick
+
+
+reproduces a given commit (like rebase for a single commit)
+
+Setting some environment
+
+    mkdir dir
+    cd dir
+    git init
+    echo hello > foo
+    git add foo
+    git commit -m "foo"
+    git checkout -b branch
+    echo world >> foo
+    git commit -am "foo updated"
+    echo bla > bar
+    git add bar
+    git commit -m "bar"
+
+Cherry-picking
+
+    git log pretty=oneline # check the commit that one wants to reproduce
+    git checkout master
+    git cherry-pick 01234....
+
+Result
+
+    cat foo
+        hello
+        world
+
+See also
+- [Cherry pick](http://wiki.koha-community.org/wiki/Using_Git_Cherry_Pick)
+- [How od you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/449632#449632)
+
+### Patch
+
+A patch can be generated...
+
+    git checkout -b branch
+    ...
+    git commit -m "one of many? commits"
+    git format-patch master --stdout > my_branch_patch.txt
+
+An applied somewhere else
+
+    git apply --stat my_branch_patch.txt    # shows the diffs
+    git apply --check my_branch_patch.txt   # tests for conflicts
+    git am --signoff < my_branch_patch.txt  # applies the patch
+
+Alternatively one can also create a patch like
+
+    git format-patch HEAD~~                                   # will create two files for the previous two commits
+    git format-patch 338bf1bd431a34cd8d5f0a0cad524e2848b5cc98 # will create N files for the N commits since the marked commit
+    git diff 338bf1b fcc8a9f > my_patch.txt                   # Create a patch from the difference between two commits
+
+See also
+- [How to create and apply a patch with git](https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/)
+- [How to create and apply patches](http://makandracards.com/makandra/2521-git-how-to-create-and-apply-patches)
+- [Git patch create and apply](http://www.thegeekstuff.com/2014/03/git-patch-create-and-apply/)
+- [format-patch](http://git-scm.com/docs/git-format-patch)
+- [Patching](http://git-scm.com/book/en/v2/Git-Commands-Patching)
+
+and for `git am` vs `git apply` see also
+- [git-am](http://git-scm.com/docs/git-am)
+- [What is the difference between git am and git apply](https://stackoverflow.com/questions/12240154/what-is-the-difference-between-git-am-and-git-apply)
+
+Conflicts
+- [clone]
+
+      git format-patch origin
+
+- [orig]
+
+      git am -3 --signoff 0001-my-commit-message.patch
+
+  the -3 attempts to find a 3-way merge, and then allow to run
+
+      git mergetools 
+
+  if a conflict occurs
+
+but it is not working if the original does not exist when the conflict is resolved
+
+    git am --continue # as indicated
+
+If a series of patches was generated, and we want to apply all of them but keeping each their own commit
+
+    git am *.patch
+
+See [how to apply multiple git patches in one shot](https://stackoverflow.com/questions/18494750/how-to-apply-multiple-git-patches-in-one-shot).
+
+Sometimes, when applying a patch, there are errors, because the target files have been changed in compare to what the patch was expecting. This can be illustrated using
+
+    git apply --reject --whitespace=fix file.patch
+
+any file error would appear as `filename.rej`. One can use `wiggle` to try to force applying the patch as
+
+    wiggle --replace file file.rej
+
+Once all the errors have been fixed
+
+    git status
+    git add modified_files
+    git am --continue
+
+Further information on
+- [Email](http://git-scm.com/book/en/v2/Git-Commands-Email)
+- [Maintaining a project: git am](http://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project#_git_am)
+- [git-am](http://git-scm.com/docs/git-am)
+
+
+### Hooks
+
+
+`hooks` are scripts that can be run when some `git` commands are run. This allows, e.g., to enforce some policy on push. But it can also force a formatting in commit messaged or further tasks.
+
+Some information can be found on
+- [Git hooks](http://www.git-scm.com/book/en/v2/Customizing-Git-Git-Hooks)
+- [Enforced policy](http://www.git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy)
+
+Examples
+
+- pre-commit
+
+  ```bash
+  #!/bin/bash
+  # Generates a random number that is included into a header, and will be commited
+
+  id="$(cat /dev/urandom | tr -dc '0-9a-f' | fold -w 8 | head -n 1)"
+
+  file=version.h
+
+  if [ -e $file ]
+  then
+      rm -f $file
+  fi
+
+  echo "#define GIT_VERSION 0x$id" >> $file
+
+  git add $file
+
+  exit 0
+  ```
+
+- prepare-commit-msg
+
+  ```bash
+  #!/bin/bash
+  # Get the randomly generated ID from the file and add it to the commit message
+
+  ID="$(sed -n 's/^.*\ 0x\([0-9a-f]\+\)/\1/p' version.h)"
+
+  echo "[$ID]" >> $1
+
+  exit 0
+  ```
+
+- post-commit
+
+  ```bash
+  #!/bin/bash
+  # Write the git hash into a file. That file is not included in the commit
+
+  file=version.h
+
+  if [ -e $file ]
+  then
+    rm -f $file
+  fi
+
+  echo "#define GIT_VERSION \"$(git rev-parse --short=8 HEAD)\"" >> $file
+
+  exit 0
+  ```
+
+- pre-push
+
+  ```bash
+  #!/bin/sh
+  # prevents you from pushing a local local/bla local_jkdfs branch
+
+  remote="$1"
+  url="$2"
+
+  z40=0000000000000000000000000000000000000000
+
+  while read local_ref local_sha remote_ref remote_sha
+  do
+      if [  ! -z `echo "$local_ref" | grep "local*"` ]
+      then
+          echo "This is defined as a local branch."
+          echo "A hook is prevening you from pushing local branches."
+          exit 1
+      fi
+  done
+
+  exit 0
+  ```
+
+- post-checkout
+
+  is called by
+
+      git checkout
+      git checkout -b
+      git clone
+
+- post-merge
+
+  is called by
+
+      git merge
+      git pull
+
+Include git hash into a file
+
+```bash
+cat .git/hooks/post-commit
+    #!/bin/sh
+
+    echo "Running post-commit"
+    ./update_git.sh
+
+cat .git/hooks/post-checkout
+    #!/bin/sh
+
+    echo "Running post-checkout"
+    ./update_git.sh
+
+cat update_git.sh
+    #!/bin/sh
+
+    FILE=version.h
+
+    if [ -e $FILE ]
+    then
+        rm -f $FILE
+    fi
+
+    echo "#define GIT_VERSION \"$(git rev-parse --short=8 HEAD)\"" >> $FILE
+
+    echo "$FILE contains:"
+    cat version.h
+```
+
+`version.h` gets updated on each commit/checkout but also with clone, when doing, e.g.
+
+    git clone --template=path/to/original/.git path/to/original
+
+
+### Notes
+
+Reference: [Notes](https://git-scm.com/2010/08/25/notes.html).
+
+Add a note
+
+    git notes add <commit>
+    git notes add -m "text of the note" <commit>
+
+Edit a note
+
+    git notes edit <commit>
+
+Remove a note
+
+    git notes remove <commit>
+
+See notes
+
+    git log --show-notes
+
+It is possible to share the notes, but that can be somewhat complex and a source of problems.
+
+
 ### Request-pull
 
 
@@ -822,8 +1064,22 @@ See
 
     git request-pull [options] start url [end]git request-pull v1.0 https://git.ko.xz/project master
 
+### Philosophy and issues
+
+Read the following
+- [Ref.](http://www.randyfay.com/node/89)
+- [Git workflow](https://sandofsky.com/blog/git-workflow.html)
+- [Workflows](https://www.atlassian.com/zh/git/workflows)
+- [Maintaining a project](http://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project)
+- [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+
+to ff or not to ff
+- [Fast forward](http://ariya.ofilabs.com/2013/09/fast-forward-git-merge.html)
+- [Why does git fast forward merges by default](https://stackoverflow.com/questions/2850369/why-does-git-fast-forward-merges-by-default/2850413#2850413)
+
 ### Change history
 
+#### Edit last commit
 
 edit the last commit's comment
 
@@ -838,139 +1094,64 @@ e.g. one file forgotten/not complete
     git add file
     git commit --amend
 
+#### Edit earlier commit
+
 to come back 3 commits in the past.
 
     git rebase -i HEAD~3
 
 See also [Rewriting History](http://www.git-scm.com/book/en/v2/Git-Tools-Rewriting-History).
 
+To modify the history (are you sure?), one can do
+
+    git rebase --interactive '##hash##^' # change pick to edit
+    git commit --all --amend --no-edit   
+
+`--no-edit` should be removed if one wants to rewrite the comment
+
+    git rebase --continue
+
+If the commits were already shared (pushed), that might create some issues and thus should be avoided.
+
+See [How to modify a specified commit in git](https://stackoverflow.com/questions/1186535/how-to-modify-a-specified-commit-in-git#1186549)
+
+
+#### Discard modifications
+
 remove modifications since last commit
 
     git checkout -- filename
 
+#### Merge correction
+
 Forgot the no-ff:
 
-    git checkout master
-    git merge branch
-    git checkout HEAD~~    # come back two commit in the past: e.g. where it was before the merge
-    git merge --no-ff branchgit push origin master
+```bash
+git checkout master
+git merge branch
+git checkout HEAD~~    # come back two commit in the past: e.g. where it was before the merge
+git merge --no-ff branch
+git push origin master
+```
+
+#### Author name
 
 Change the author name
 
     git commit --amend --author="New Name <email@example.com>"
 
-### Recover data and garbage collector
-
-Calling the garbage collector
-
-    git gc
-
-See also [Maintainance and data recovery](http://www.git-scm.com/book/en/v2/Git-Internals-Maintenance-and-Data-Recovery).
-
-### Tree visualisation
-
-
-built-in
-
-    git log --graph --pretty=oneline --all --abbrev-commit --decorate
-
-one can set it as
-
-    git config --global alias.tree "log --oneline --decorate --all --graph"
-
-or
-
-    git config --global alias.tree "log --pretty=\"format:%C(auto)%h %ad%d [%aN, %G?] - %s %N\" --all --decorate --graph --color --date=short"
-
-and run
-
-    git tree
-
-extra command: `tig`
-
-    aptitude install tig
-    tig --all
-
-(interactive/ncurses)
-Use 'h' to get to some inline help
-
-alternative: `gitk`
-
-    aptitude install gitk
-    gitk
-
-(GUI)
-
-### Configuration
-
-Configuration can be done on a local scale (repo only) or global scale (all projects)
-
-    git config --global user.name "Bilbopingouin"
-    git config --global user.email "bilbopingouin@]
-
-saves in `~/.gitconfig`
-
-    git config user.name "Bilbopingouin" # in current repo
-
-Useful commands may also be
-
-    git config --global merge.tool vimdiff
-    git config --global diff.tool vimdiff
-    git config --global core.editor vim
-    git config --global alias.tree "log --pretty=oneline --decorate --all --abbrev-commit --graph"
-    git config --global merge.conflictstyle diff3
-    git config --global branch.master.mergeoptions --no-ff --no-commit
-    git config --global core.excludefile ~/.gitignore_global
-    git config --global color.ui auto
-    git config --global core.pager "less -FX"
-
-See also [git contig](http://sip-router.org/wiki/git/gitconfig).
-
-and using a global `.gitignore_global` as
-
-    cat .gitignore_global
-      # Windows
-      .DS_Store
-
-      # vim / backups
-      .*.swp
-      *~
-
-      # archive
-      *.tar.bz2
-      *.tar.gz
-      *.zip
-
-See [Git configuration](http://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration).
-
-When having personal repo in a work environment, it might be a good idea to have local config
-
-    git config --local user.name "bob"
-    git config --local user.email "bob@email.me"
-
-
-### Migrate a git repo
-
-Use the following
-
-    git clone project@server1
-    cd project
-    git pull --all
-    for remote in `git branch -r | grep -v master `; do git checkout --track $remote ; done
-    git remote add server2 git@server2:project
-    git push server2 --mirror
-
 ### Removing a file from history
 
 See [Completely remove file from all git repository](https://stackoverflow.com/questions/307828/completely-remove-file-from-all-git-repository-commit-history#308684)
 
-IIt can be done as
+It can be done as
 
-    git filter-branch --index-filter 'git rm --cached --ignore-unmatch <file>'
-    git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
-    git reflog expire --expire=now --all
-    git gc --aggressive --prune=now
-
+```bash
+git filter-branch --index-filter 'git rm --cached --ignore-unmatch <file>'
+git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
+git reflog expire --expire=now --all
+git gc --aggressive --prune=now
+```
 
 ### Split a repository
 
@@ -1098,118 +1279,155 @@ See also:
 - [Merging two git repositories into one repository without losing file history](http://saintgimp.org/2013/01/22/merging-two-git-repositories-into-one-repository-without-losing-file-history/)
 - [How can I rewrite history so that all files are in a subdirectory](https://stackoverflow.com/questions/4042816/how-can-i-rewrite-history-so-that-all-files-are-in-a-subdirectory)
 
-### Cherry-pick
+### Submodule merge into main repo
 
 
-reproduces a given commit (like rebase for a single commit)
+See the [SO reference](https://stackoverflow.com/questions/1759587/un-submodule-a-git-submodule).
 
-Setting some environment
+with the main repo being `repo1` which includes a submodule: `subrepo1` (and one only)
 
-    mkdir dir
-    cd dir
-    git init
-    echo hello > foo
-    git add foo
-    git commit -m "foo"
-    git checkout -b branch
-    echo world >> foo
-    git commit -am "foo updated"
-    echo bla > bar
-    git add bar
-    git commit -m "bar"
+1. Get the code
 
-Cherry-picking
+      git clone repo1
+      git submodule init
+      git submodule update
 
-    git log pretty=oneline # check the commit that one wants to reproduce
-    git checkout master
-    git cherry-pick 01234....
+2. Get the history of the submodule into the main
 
-Result
+      git remote add subm_origin subrepo1   # Adding as remote the address of the submodule
+      git fetch subm_origin                   
 
-    cat foo
-        hello
-        world
+      git merge -s ours --no-commit subm_origin/branch     
 
-See also
-- [Cherry pick](http://wiki.koha-community.org/wiki/Using_Git_Cherry_Pick)
-- [How od you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/449632#449632)
+  to make sure, one can run `git submodule` this shows the commit/branches of the submodule, one should use the `subm_origin/<last_name_after_slash_from_git_submodule_command>`
 
-### Patch
+3. Suppress references to the submodule, without deleting the code
 
-A patch can be generated...
+      git rm --cached path/to/subm
+      git rm .gitmodules
 
-    git checkout -b branch
-    ...
-    git commit -m "one of many? commits"
-    git format-patch master --stdout > my_branch_patch.txt
+  alternatively
 
-An applied somewhere else
+      vim .gitsubmodules
+      git add .gitsubmodules
 
-    git apply --stat my_branch_patch.txt    # shows the diffs
-    git apply --check my_branch_patch.txt   # tests for conflicts
-    git am --signoff < my_branch_patch.txt  # applies the patch
+  finally
 
-Alternatively one can also create a patch like
+      rm -rf path/to/subm/.git
 
-    git format-patch HEAD~~                                   # will create two files for the previous two commits
-    git format-patch 338bf1bd431a34cd8d5f0a0cad524e2848b5cc98 # will create N files for the N commits since the marked commit
-    git diff 338bf1b fcc8a9f > my_patch.txt                   # Create a patch from the difference between two commits
+4. Add the code as new 
 
-See also
-- [How to create and apply a patch with git](https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/)
-- [How to create and apply patches](http://makandracards.com/makandra/2521-git-how-to-create-and-apply-patches)
-- [Git patch create and apply](http://www.thegeekstuff.com/2014/03/git-patch-create-and-apply/)
-- [format-patch](http://git-scm.com/docs/git-format-patch)
-- [Patching](http://git-scm.com/book/en/v2/Git-Commands-Patching)
+      git add path/to/subm
+      git commit -m "submodule reintegrated"
 
-and for `git am` vs `git apply` see also
-- [git-am](http://git-scm.com/docs/git-am)
-- [What is the difference between git am and git apply](https://stackoverflow.com/questions/12240154/what-is-the-difference-between-git-am-and-git-apply)
+5. Clean
 
-Conflicts
-- [clone]
+      git remote rm subm_origin
 
-      git format-patch origin
+Note that the last part (after the merge) integrate the current files into the current repo. But the merge and preceeding allows to keep the history of the submodules.
 
-- [orig]
 
-      git am -3 --signoff 0001-my-commit-message.patch
 
-  the -3 attempts to find a 3-way merge, and then allow to run
+### Recover data and garbage collector
 
-      git mergetools 
+Calling the garbage collector
 
-  if a conflict occurs
+    git gc
 
-but it is not working if the original does not exist when the conflict is resolved
+See also [Maintainance and data recovery](http://www.git-scm.com/book/en/v2/Git-Internals-Maintenance-and-Data-Recovery).
 
-    git am --continue # as indicated
+### Tree visualisation
 
-If a series of patches was generated, and we want to apply all of them but keeping each their own commit
 
-    git am *.patch
+built-in
 
-See [how to apply multiple git patches in one shot](https://stackoverflow.com/questions/18494750/how-to-apply-multiple-git-patches-in-one-shot).
+    git log --graph --pretty=oneline --all --abbrev-commit --decorate
 
-Sometimes, when applying a patch, there are errors, because the target files have been changed in compare to what the patch was expecting. This can be illustrated using
+one can set it as
 
-    git apply --reject --whitespace=fix file.patch
+    git config --global alias.tree "log --oneline --decorate --all --graph"
 
-any file error would appear as `filename.rej`. One can use `wiggle` to try to force applying the patch as
+or
 
-    wiggle --replace file file.rej
+    git config --global alias.tree "log --pretty=\"format:%C(auto)%h %ad%d [%aN, %G?] - %s %N\" --all --decorate --graph --color --date=short"
 
-Once all the errors have been fixed
+and run
 
-    git status
-    git add modified_files
-    git am --continue
+    git tree
 
-Further information on
-- [Email](http://git-scm.com/book/en/v2/Git-Commands-Email)
-- [Maintaining a project: git am](http://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project#_git_am)
-- [git-am](http://git-scm.com/docs/git-am)
+extra command: `tig`
 
+    aptitude install tig
+    tig --all
+
+(interactive/ncurses)
+Use 'h' to get to some inline help
+
+alternative: `gitk`
+
+    aptitude install gitk
+    gitk
+
+(GUI)
+
+### Configuration
+
+Configuration can be done on a local scale (repo only) or global scale (all projects)
+
+    git config --global user.name "Bilbopingouin"
+    git config --global user.email "bilbopingouin@]
+
+saves in `~/.gitconfig`
+
+    git config user.name "Bilbopingouin" # in current repo
+
+Useful commands may also be
+
+    git config --global merge.tool vimdiff
+    git config --global diff.tool vimdiff
+    git config --global core.editor vim
+    git config --global alias.tree "log --pretty=oneline --decorate --all --abbrev-commit --graph"
+    git config --global merge.conflictstyle diff3
+    git config --global branch.master.mergeoptions --no-ff --no-commit
+    git config --global core.excludefile ~/.gitignore_global
+    git config --global color.ui auto
+    git config --global core.pager "less -FX"
+
+See also [git contig](http://sip-router.org/wiki/git/gitconfig).
+
+and using a global `.gitignore_global` as
+
+    cat .gitignore_global
+      # Windows
+      .DS_Store
+
+      # vim / backups
+      .*.swp
+      *~
+
+      # archive
+      *.tar.bz2
+      *.tar.gz
+      *.zip
+
+See [Git configuration](http://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration).
+
+When having personal repo in a work environment, it might be a good idea to have local config
+
+    git config --local user.name "bob"
+    git config --local user.email "bob@email.me"
+
+
+### Migrate a git repo
+
+Use the following
+
+    git clone project@server1
+    cd project
+    git pull --all
+    for remote in `git branch -r | grep -v master `; do git checkout --track $remote ; done
+    git remote add server2 git@server2:project
+    git push server2 --mirror
 
 ### Rename a branch
 
@@ -1370,6 +1588,176 @@ See
 - [How do you delete a remote branch properly](https://stackoverflow.com/questions/5183051/how-do-you-delete-a-remote-git-branch-properly-a-k-a-updating-the-remote-bra#5183258)
 - [Differences between git remote update and fetch](https://stackoverflow.com/questions/1856499/differences-between-git-remote-update-and-fetch)
 
+### Prevent from pushing a local branch
+
+
+In `.git/hooks/pre-push` we can write
+
+```bash
+#!/bin/sh
+
+remote="$1"
+url="$2"
+
+while read local_ref local_sha remote_ref remote_sha
+do
+if [  ! -z `echo "$local_ref" | grep "local*"` ]
+then
+    echo "This is defined as a local branch."
+    echo "A hook is prevening you from pushing local branches."
+    exit 1
+fi
+done
+
+exit 0
+```
+
+That way, any branch within that local repository named `local` or `local/*` will be blocked when calling `git push`.
+
+- [Block a git branch from being pushed](https://stackoverflow.com/questions/6644329/block-a-git-branch-from-being-pushed)
+- [Writing a git post-receive hook to deal with a specific branch](https://stackoverflow.com/questions/7351551/writing-a-git-post-receive-hook-to-deal-with-a-specific-branch)
+
+See also how to get the hook as a [global setting](https://stackoverflow.com/questions/2293498/git-commit-hooks-global-settings).
+
+### Change origin url
+
+
+Test remote url:
+
+    git remote show origin
+
+Add a new url
+
+    git remote add server git@gitserver:prj
+
+Change/Update the url
+
+    git remote set-url origin git@gitserver:prj
+
+### Signed commits
+
+
+Reference: [Signing your work](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work)
+
+Generate a key
+
+    gpg --gen-key
+
+Configuration
+
+    git config --global user.signkey 12345678
+
+Signed commit
+
+    git -S -am "Commit"
+
+Read signatures
+
+    git log --show-signature
+    git log --pretty="format:%h %G?" 
+
+`%G?` provides a `G` when signed and a `N` when not signed.
+
+Sign tag
+
+    git tag -s v1.5 -m "my signed tag"
+
+using -s instead of -a
+
+### End-of-line
+
+
+When collaborating with users on different computer OSes, one might avoid issues with CRLF (Carriage Return Line Feed).
+
+References:
+- [How line ending conversions work with git core.autocrlf](http://stackoverflow.com/questions/3206843/how-line-ending-conversions-work-with-git-core-autocrlf-between-different-operat#4425433)
+- [Dealing with line endings](https://help.github.com/articles/dealing-with-line-endings/)
+
+On Windows, one should run
+
+    git config --global core.autocrlf true
+
+On OSX or Linux, better
+
+    git config --global core.autocrlf input
+
+But some other options can be considered as indicated in the links above.
+
+### Merge taking always the remote
+
+Running
+
+    git merge --strategy-option theirs
+
+See [How to keep the local file or the remote file during merge using git](https://stackoverflow.com/questions/6650215/how-to-keep-the-local-file-or-the-remote-file-during-merge-using-git-and-the-com).
+
+
+### Merge single file / partial merge
+
+There are various alternatives to do it. In particular to keep a nice history tree.
+
+Checking out the file from another branch
+
+```bash
+git checkout branch file1 [file2 ...]
+git commit -m "merge file1 from branch"
+```
+
+it should be noted that it somehow breaks the history (it is no merge, works more like a patch, which could also be an option). See 
+[How to merge specific files from another branch](http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/)
+This could still be marked by using
+
+    git merge branch -s ours 
+
+which will create a new commit, but without changing anything to the content.
+
+Another way is to run
+
+    git merge --no-ff --no-commit branch
+
+Reject updates by
+
+    git checkout HEAD^ file
+
+or
+
+    git reset HEAD^ file
+
+but then git consider the merge to be full and you cannot re-run merge to add the missing files ([How do you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/7292109#7292109)).
+
+An alternative to achieve the same effect
+
+```bash
+git merge --no-ff --no-commit -s ours branch        # -s ours reject all modification, but mark the parenting
+git checkout branch -- file
+```
+
+See also [How do you merge selective files with git](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/12613427#12613427).
+
+`git cherry-pick` and `git rebase -i` offer options when modifications on that file are in separate commits
+(ditto)
+
+```bash
+git cherry-pick <commit hash>     # apply the commit to the current branch (automatically commit)
+```
+
+or even [split the commits](http://plasmasturm.org/log/530/).
+
+another alternative is to use
+
+    git checkout branch file
+    git stash
+    git merge stash
+
+this gives some information that the version from file is merged from somewhere and can be followed by
+
+    git merge branch
+
+See also
+- [How do you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/7184182#7184182)
+- [Stashing](http://git-scm.com/book/en/v1/Git-Tools-Stashing)
+
+
 ### Gitolite: git on server
 
 See
@@ -1497,352 +1885,6 @@ Alice and Bob have `RW+` rights on `proj1`
 Alice and Carl have `RW+` rights on `proj2`, but Bob still has `R` rights.
 
 
-### Hooks
-
-
-`hooks` are scripts that can be run when some `git` commands are run. This allows, e.g., to enforce some policy on push. But it can also force a formatting in commit messaged or further tasks.
-
-Some information can be found on
-- [Git hooks](http://www.git-scm.com/book/en/v2/Customizing-Git-Git-Hooks)
-- [Enforced policy](http://www.git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy)
-
-Examples
-
-- pre-commit
-
-  ```bash
-  #!/bin/bash
-  # Generates a random number that is included into a header, and will be commited
-
-  id="$(cat /dev/urandom | tr -dc '0-9a-f' | fold -w 8 | head -n 1)"
-
-  file=version.h
-
-  if [ -e $file ]
-  then
-      rm -f $file
-  fi
-
-  echo "#define GIT_VERSION 0x$id" >> $file
-
-  git add $file
-
-  exit 0
-  ```
-
-- prepare-commit-msg
-
-  ```bash
-  #!/bin/bash
-  # Get the randomly generated ID from the file and add it to the commit message
-
-  ID="$(sed -n 's/^.*\ 0x\([0-9a-f]\+\)/\1/p' version.h)"
-
-  echo "[$ID]" >> $1
-
-  exit 0
-  ```
-
-- post-commit
-
-  ```bash
-  #!/bin/bash
-  # Write the git hash into a file. That file is not included in the commit
-
-  file=version.h
-
-  if [ -e $file ]
-  then
-    rm -f $file
-  fi
-
-  echo "#define GIT_VERSION \"$(git rev-parse --short=8 HEAD)\"" >> $file
-
-  exit 0
-  ```
-
-- pre-push
-
-  ```bash
-  #!/bin/sh
-  # prevents you from pushing a local local/bla local_jkdfs branch
-
-  remote="$1"
-  url="$2"
-
-  z40=0000000000000000000000000000000000000000
-
-  while read local_ref local_sha remote_ref remote_sha
-  do
-      if [  ! -z `echo "$local_ref" | grep "local*"` ]
-      then
-          echo "This is defined as a local branch."
-          echo "A hook is prevening you from pushing local branches."
-          exit 1
-      fi
-  done
-
-  exit 0
-  ```
-
-- post-checkout
-
-  is called by
-
-      git checkout
-      git checkout -b
-      git clone
-
-- post-merge
-
-  is called by
-
-      git merge
-      git pull
-
-Include git hash into a file
-
-```bash
-cat .git/hooks/post-commit
-    #!/bin/sh
-
-    echo "Running post-commit"
-    ./update_git.sh
-
-cat .git/hooks/post-checkout
-    #!/bin/sh
-
-    echo "Running post-checkout"
-    ./update_git.sh
-
-cat update_git.sh
-    #!/bin/sh
-
-    FILE=version.h
-
-    if [ -e $FILE ]
-    then
-        rm -f $FILE
-    fi
-
-    echo "#define GIT_VERSION \"$(git rev-parse --short=8 HEAD)\"" >> $FILE
-
-    echo "$FILE contains:"
-    cat version.h
-```
-
-`version.h` gets updated on each commit/checkout but also with clone, when doing, e.g.
-
-    git clone --template=path/to/original/.git path/to/original
-
-
-### Prevent from pushing a local branch
-
-
-In `.git/hooks/pre-push` we can write
-
-```bash
-#!/bin/sh
-
-remote="$1"
-url="$2"
-
-while read local_ref local_sha remote_ref remote_sha
-do
-if [  ! -z `echo "$local_ref" | grep "local*"` ]
-then
-    echo "This is defined as a local branch."
-    echo "A hook is prevening you from pushing local branches."
-    exit 1
-fi
-done
-
-exit 0
-```
-
-That way, any branch within that local repository named `local` or `local/*` will be blocked when calling `git push`.
-
-- [Block a git branch from being pushed](https://stackoverflow.com/questions/6644329/block-a-git-branch-from-being-pushed)
-- [Writing a git post-receive hook to deal with a specific branch](https://stackoverflow.com/questions/7351551/writing-a-git-post-receive-hook-to-deal-with-a-specific-branch)
-
-See also how to get the hook as a [global setting](https://stackoverflow.com/questions/2293498/git-commit-hooks-global-settings).
-
-### Change origin url
-
-
-Test remote url:
-
-    git remote show origin
-
-Add a new url
-
-    git remote add server git@gitserver:prj
-
-Change/Update the url
-
-    git remote set-url origin git@gitserver:prj
-
-### Submodule merge into main repo
-
-
-See the [SO reference](https://stackoverflow.com/questions/1759587/un-submodule-a-git-submodule).
-
-with the main repo being `repo1` which includes a submodule: `subrepo1` (and one only)
-
-1. Get the code
-
-      git clone repo1
-      git submodule init
-      git submodule update
-
-2. Get the history of the submodule into the main
-
-      git remote add subm_origin subrepo1   # Adding as remote the address of the submodule
-      git fetch subm_origin                   
-
-      git merge -s ours --no-commit subm_origin/branch     
-
-  to make sure, one can run `git submodule` this shows the commit/branches of the submodule, one should use the `subm_origin/<last_name_after_slash_from_git_submodule_command>`
-
-3. Suppress references to the submodule, without deleting the code
-
-      git rm --cached path/to/subm
-      git rm .gitmodules
-
-  alternatively
-
-      vim .gitsubmodules
-      git add .gitsubmodules
-
-  finally
-
-      rm -rf path/to/subm/.git
-
-4. Add the code as new 
-
-      git add path/to/subm
-      git commit -m "submodule reintegrated"
-
-5. Clean
-
-      git remote rm subm_origin
-
-Note that the last part (after the merge) integrate the current files into the current repo. But the merge and preceeding allows to keep the history of the submodules.
-
-
-### Signed commits
-
-
-Reference: [Signing your work](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work)
-
-Generate a key
-
-    gpg --gen-key
-
-Configuration
-
-    git config --global user.signkey 12345678
-
-Signed commit
-
-    git -S -am "Commit"
-
-Read signatures
-
-    git log --show-signature
-    git log --pretty="format:%h %G?" 
-
-`%G?` provides a `G` when signed and a `N` when not signed.
-
-Sign tag
-
-    git tag -s v1.5 -m "my signed tag"
-
-using -s instead of -a
-
-### Notes
-
-Reference: [Notes](https://git-scm.com/2010/08/25/notes.html).
-
-Add a note
-
-    git notes add <commit>
-    git notes add -m "text of the note" <commit>
-
-Edit a note
-
-    git notes edit <commit>
-
-Remove a note
-
-    git notes remove <commit>
-
-See notes
-
-    git log --show-notes
-
-It is possible to share the notes, but that can be somewhat complex and a source of problems.
-
-
-### End-of-line
-
-
-When collaborating with users on different computer OSes, one might avoid issues with CRLF (Carriage Return Line Feed).
-
-References:
-- [How line ending conversions work with git core.autocrlf](http://stackoverflow.com/questions/3206843/how-line-ending-conversions-work-with-git-core-autocrlf-between-different-operat#4425433)
-- [Dealing with line endings](https://help.github.com/articles/dealing-with-line-endings/)
-
-On Windows, one should run
-
-    git config --global core.autocrlf true
-
-On OSX or Linux, better
-
-    git config --global core.autocrlf input
-
-But some other options can be considered as indicated in the links above.
-
-### Rewrite history
-
-To modify the history (are you sure?), one can do
-
-    git rebase --interactive '##hash##^' # change pick to edit
-    git commit --all --amend --no-edit   
-
-`--no-edit` should be removed if one wants to rewrite the comment
-
-    git rebase --continue
-
-If the commits were already shared (pushed), that might create some issues and thus should be avoided.
-
-See [How to modify a specified commit in git](https://stackoverflow.com/questions/1186535/how-to-modify-a-specified-commit-in-git#1186549)
-
-### Merge taking always the remote
-
-Running
-
-    git merge --strategy-option theirs
-
-See [How to keep the local file or the remote file during merge using git](https://stackoverflow.com/questions/6650215/how-to-keep-the-local-file-or-the-remote-file-during-merge-using-git-and-the-com).
-
-### Diffs
-
-
-Only show the list of files that differ
-
-    git diff --name-only branch
-
-Use no pager
-
-    git --no-pager diff --name-only branch
-
-Ignore the whitespaces
-
-    git diff -w <commit>
-
-See also [Ignore all whitespace changes with git diff between commits](https://stackoverflow.com/questions/33159394/ignore-all-whitespace-changes-with-git-diff-between-commits)
-
 ### Tig
 
 References
@@ -1918,29 +1960,4 @@ Example usage:
 Some configuration can be placed into a `~/.tigrc` file ([tigrc manual](https://jonas.github.io/tig/doc/tigrc.5.html)), like
 
     set main-view-id = display:true
-
-### Stash
-
-
-Save modifications as temporary "commit"
-
-    git stash
-
-List temps
-
-    git stash list
-
-Edit the stash
-
-    git stash pop [<stash>]
-    git stash apply [<stash>]
-
-Discard the last stash 
-
-    git stash drop [<stash>]
-
-Make a branch out of a stash
-
-    git stash branch branchname
-
 
