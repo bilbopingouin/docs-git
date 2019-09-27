@@ -36,6 +36,9 @@
 * [Notes](#notes)
 * [Request-pull](#request-pull)
 * [Philosophy and issues](#philosophy-and-issues)
+	* [Workflows](#workflows)
+	* [Fast-forward or not](#fast-forward-or-not)
+	* [Commit early commit often](#commit-early-commit-often)
 * [Change history](#change-history)
 	* [Edit last commit](#edit-last-commit)
 	* [Edit earlier commit](#edit-earlier-commit)
@@ -1110,6 +1113,8 @@ See
 
 ### Philosophy and issues
 
+#### Workflows
+
 Read the following
 - [Ref.](http://www.randyfay.com/node/89)
 - [Git workflow](https://sandofsky.com/blog/git-workflow.html)
@@ -1117,9 +1122,33 @@ Read the following
 - [Maintaining a project](http://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project)
 - [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
+#### Fast-forward or not
+
 to ff or not to ff
 - [Fast forward](http://ariya.ofilabs.com/2013/09/fast-forward-git-merge.html)
 - [Why does git fast forward merges by default](https://stackoverflow.com/questions/2850369/why-does-git-fast-forward-merges-by-default/2850413#2850413)
+
+#### Commit early commit often
+
+Arguments on why more commits is preferable.
+
+Git:
+- Decentralised: no single central points, so commits do not have to be shared with everyone all the time
+- At the core of the tool
+- Used with many commits by large and experienced communities (e.g. Linux kernel)
+- Accomodates various workflows
+
+Development:
+- Keep trace of the steps of the development (the order of the things as well as the 
+- Allows to run `bisect` tools
+- Allows more frequent local merge of other developments
+- Help design atomic elements
+- Can prevent hardware (HDD) failures
+- Allows review of alternative/past solutions
+
+Read also
+- [Commit Often, Perfect Later, Publish Once: Git Best Practices](https://sethrobertson.github.io/GitBestPractices/)
+- [Git: Commit Early, Commit Often](http://www.databasically.com/2011/03/14/git-commit-early-commit-often/)
 
 ### Change history
 
