@@ -398,8 +398,10 @@ git bisect reset                    # end the bisect and reset back HEAD to its 
 
 Alternatively, one can use a script that checks directly. The script should return 0 if good and non-0 otherwise, one can do:
 
-    git bisect start <bad hash> <good bash>
-    git bisect run test.sh
+```bash
+git bisect start <bad hash> <good bash>
+git bisect run test.sh
+```
 
 
 ### Subtree
@@ -809,18 +811,24 @@ Instead of calling with `HEAD~`, calling reset HEAD does:
 
 afterward, a
 
-    git reset --soft b84dd89
+```bash
+git reset --soft b84dd89
+```
 
 can be used to go back to where we were before the reset. The hash can be found in `git reflog`.
 
 discard changes since last commit on a file
 
-    git checkout -- path/to/file.c
+```bash
+git checkout -- path/to/file.c
+```
 
 revert last commit local and remote
 
-    git reset HEAD^   # remove last commit locally, but keep the changes. Use --hard to discard them completely
-    git push --force  # One should be careful that no one has synchronised their copy! 
+```bash
+git reset HEAD^   # remove last commit locally, but keep the changes. Use --hard to discard them completely
+git push --force  # One should be careful that no one has synchronised their copy! 
+```
 
 
 ### Cherry-pick
@@ -830,24 +838,28 @@ reproduces a given commit (like rebase for a single commit)
 
 Setting some environment
 
-    mkdir dir
-    cd dir
-    git init
-    echo hello > foo
-    git add foo
-    git commit -m "foo"
-    git checkout -b branch
-    echo world >> foo
-    git commit -am "foo updated"
-    echo bla > bar
-    git add bar
-    git commit -m "bar"
+```bash
+mkdir dir
+cd dir
+git init
+echo hello > foo
+git add foo
+git commit -m "foo"
+git checkout -b branch
+echo world >> foo
+git commit -am "foo updated"
+echo bla > bar
+git add bar
+git commit -m "bar"
+```
 
 Cherry-picking
 
-    git log pretty=oneline # check the commit that one wants to reproduce
-    git checkout master
-    git cherry-pick 01234....
+```bash
+git log pretty=oneline # check the commit that one wants to reproduce
+git checkout master
+git cherry-pick 01234....
+```
 
 Result
 
@@ -863,22 +875,28 @@ See also
 
 A patch can be generated...
 
-    git checkout -b branch
-    ...
-    git commit -m "one of many? commits"
-    git format-patch master --stdout > my_branch_patch.txt
+```bash
+git checkout -b branch
+...
+git commit -m "one of many? commits"
+git format-patch master --stdout > my_branch_patch.txt
+```
 
 An applied somewhere else
 
-    git apply --stat my_branch_patch.txt    # shows the diffs
-    git apply --check my_branch_patch.txt   # tests for conflicts
-    git am --signoff < my_branch_patch.txt  # applies the patch
+```bash
+git apply --stat my_branch_patch.txt    # shows the diffs
+git apply --check my_branch_patch.txt   # tests for conflicts
+git am --signoff < my_branch_patch.txt  # applies the patch
+```
 
 Alternatively one can also create a patch like
 
-    git format-patch HEAD~~                                   # will create two files for the previous two commits
-    git format-patch 338bf1bd431a34cd8d5f0a0cad524e2848b5cc98 # will create N files for the N commits since the marked commit
-    git diff 338bf1b fcc8a9f > my_patch.txt                   # Create a patch from the difference between two commits
+```bash
+git format-patch HEAD~~                                   # will create two files for the previous two commits
+git format-patch 338bf1bd431a34cd8d5f0a0cad524e2848b5cc98 # will create N files for the N commits since the marked commit
+git diff 338bf1b fcc8a9f > my_patch.txt                   # Create a patch from the difference between two commits
+```
 
 See also
 - [How to create and apply a patch with git](https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/)
@@ -1098,18 +1116,35 @@ See notes
 
 It is possible to share the notes, but that can be somewhat complex and a source of problems.
 
+### Changes requests
 
-### Request-pull
+#### Request-pull
 
-
-prints out a summary of the changes between your branch and another branch.
+Prints out a summary of the changes between your branch and another branch.
 This information can be sent to other users, to suggest to pull your changes into their system to review your code
 
 See
 - [Request pull](http://www.git-scm.com/docs/git-request-pull)
 - [How to send pull request on git](https://stackoverflow.com/questions/6235379/how-to-send-pull-request-on-git)
 
-    git request-pull [options] start url [end]git request-pull v1.0 https://git.ko.xz/project master
+```bash
+git request-pull [options] start url [end]
+git request-pull v1.0 https://git.ko.xz/project master
+```
+
+#### Merge requests
+
+Some platform allows to do merge requests (e.g. github/gitlab). But it with a given link, it could be done by using
+
+```bash
+# Get the remote branch:
+git fetch git@serveur:repo BRANCH_NAME
+
+# Switch to branch locally
+git checkout -b mr/feature1 FETCH_HEAD
+```
+
+The merge can then be handled locally.
 
 ### Philosophy and issues
 
