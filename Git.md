@@ -1841,8 +1841,9 @@ See also
 - [How do you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/7184182#7184182)
 - [Stashing](http://git-scm.com/book/en/v1/Git-Tools-Stashing)
 
+### Git platforms
 
-### Gitolite: git on server
+#### Gitolite: git on server
 
 See
 - [Git on the server: gitolite](http://www.git-scm.com/book/en/v1/Git-on-the-Server-Gitolite)
@@ -1850,7 +1851,7 @@ See
 - [user view](http://gitolite.com/gitolite/user.html#pers)
 - [wild repo](http://gitolite.com/gitolite/wild.html)
 
-#### Wild repo
+##### Wild repo
 
 in gitolite conf:
 
@@ -1885,11 +1886,11 @@ and then
 
 which allows to set the permissions to WRITERS and READERS (or decide who is part of those)
 
-#### List of available repos
+##### List of available repos
 
     ssh git@gitserver info # requires read rights for git on .gitolite.rc
 
-#### Rename repo
+##### Rename repo
 
     cd ~/repositories 
     mv old-name new-name
@@ -1903,7 +1904,7 @@ change the name of the repo
     git commit -am "changing old-name to new-name"
     git push origin master
 
-#### Rights
+##### Rights
 
 - `-|R|RW+?C?D?M?`
 - `-`       access deny
@@ -1922,7 +1923,7 @@ bob has RW rights but only on branch master
 
 Note that the order is important
 
-#### Remote commands
+##### Remote commands
 
 - `ssh git@gitserver help`          prints some help
 - `ssh git@gitserver info`          lists the repo accessible
@@ -1931,7 +1932,7 @@ Note that the order is important
 - `ssh git@gitserver writable`      enables or disables push to a repo
 - `ssh git@gitserver xxxxxxxx -h`   provides help on the command
 
-#### Multiple keys
+##### Multiple keys
 
 Some user want to have an access from different machines
 
@@ -1942,7 +1943,7 @@ Some user want to have an access from different machines
 
 In the configuration file, `alice` can be used, and will match both keys.
 
-#### Aliases/groups
+##### Aliases/groups
 
 It is possible to define groups and or aliases for users like
 
@@ -1968,6 +1969,27 @@ But also to give some default rights to a series of repos
 Alice and Bob have `RW+` rights on `proj1`
 Alice and Carl have `RW+` rights on `proj2`, but Bob still has `R` rights.
 
+#### Github
+
+See [Github](https://github.com/)
+
+#### GitLab
+
+See [GitLab](https://about.gitlab.com/)
+
+##### Merge requests
+
+It is possible to get information about the merge requests locally. This can be done using
+
+```bash
+git config remote.origin.fetch '+refs/merge-requests/*:refs/remotes/origin/merge-requests/*'
+```
+
+And then runs `git fetch`. It gets the `origin/merge-requests/1` labels (similar to branches). That way, it is possible to check locally the precise merge request concerned by the code.
+
+See also
+- [GitLab Merge Requests](https://www.jvt.me/posts/2019/01/19/git-ref-gitlab-merge-requests/)
+- [GitLab checkout merge requests locally](https://docs.gitlab.com/ee/user/project/merge_requests/#checkout-merge-requests-locally)
 
 ### Tig
 
