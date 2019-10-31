@@ -2067,3 +2067,18 @@ Some configuration can be placed into a `~/.tigrc` file ([tigrc manual](https://
 
     set main-view-id = display:true
 
+### Statistics
+
+There are various tools available to get some statistics from a git repository. One of them is [Gitstats](https://github.com/hoxu/gitstats). It can be installed on Debian simply as
+
+```shell
+aptitude install gitstats
+```
+
+The simples way to run it would be using
+
+```shell
+gitstats repo output
+```
+
+It will generate different stats which will be provided in the `output` directory. Some options can be set and are summarised in its manpage.
