@@ -1,3 +1,21 @@
+
+<!-- vim-markdown-toc GFM -->
+
+* [Bleeding](#bleeding)
+* [Prefix](#prefix)
+* [Multiple panes](#multiple-panes)
+* [Inline help](#inline-help)
+* [Nested session](#nested-session)
+* [Switching between sessions](#switching-between-sessions)
+* [Rename a session](#rename-a-session)
+* [Windows](#windows)
+* [Resize panes](#resize-panes)
+* [Scrolling and copy-mode](#scrolling-and-copy-mode)
+* [Configuration](#configuration)
+* [Resources](#resources)
+
+<!-- vim-markdown-toc -->
+
 # Bleeding
 
 One problem when having the default `TERM` set to `xterm-256color`, one can see a "bleeding" in some programs.
@@ -119,6 +137,16 @@ Cycle through windows
     
 by default.
 
+# Resize panes
+
+Using
+
+    <C-b> : resize-pane
+
+For example, 
+
+    <C-b> : resize-pane -D 20 # reduces to 'D'own by 20 lines
+    <C-b> : resize-pane	-y 5  # reduces to 5 lines
 
 # Scrolling and copy-mode
 

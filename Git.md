@@ -34,7 +34,9 @@
 * [Patch](#patch)
 * [Hooks](#hooks)
 * [Notes](#notes)
-* [Request-pull](#request-pull)
+* [Changes requests](#changes-requests)
+	* [Request-pull](#request-pull)
+	* [Merge requests](#merge-requests)
 * [Philosophy and issues](#philosophy-and-issues)
 	* [Workflows](#workflows)
 	* [Fast-forward or not](#fast-forward-or-not)
@@ -62,15 +64,20 @@
 * [End-of-line](#end-of-line)
 * [Merge taking always the remote](#merge-taking-always-the-remote)
 * [Merge single file / partial merge](#merge-single-file--partial-merge)
-* [Gitolite: git on server](#gitolite-git-on-server)
-	* [Wild repo](#wild-repo)
-	* [List of available repos](#list-of-available-repos)
-	* [Rename repo](#rename-repo)
-	* [Rights](#rights)
-	* [Remote commands](#remote-commands)
-	* [Multiple keys](#multiple-keys)
-	* [Aliases/groups](#aliasesgroups)
+* [Git platforms](#git-platforms)
+	* [Gitolite: git on server](#gitolite-git-on-server)
+		* [Wild repo](#wild-repo)
+		* [List of available repos](#list-of-available-repos)
+		* [Rename repo](#rename-repo)
+		* [Rights](#rights)
+		* [Remote commands](#remote-commands)
+		* [Multiple keys](#multiple-keys)
+		* [Aliases/groups](#aliasesgroups)
+	* [Github](#github)
+	* [GitLab](#gitlab)
+		* [Merge requests](#merge-requests-1)
 * [Tig](#tig)
+* [Statistics](#statistics)
 
 <!-- vim-markdown-toc -->
 
@@ -145,43 +152,49 @@ git branch -v   # shows the last commit on each branch
 
 #### Remote Tracking
 
- We can check whether some local branch are set to track remote branch (as [How can I see which Git branches are tracking which remote / upstream branch?](https://stackoverflow.com/a/4952368/3337196))
+We can check whether some local branch are set to track remote branch (as [How can I see which Git branches are tracking which remote / upstream branch?](https://stackoverflow.com/a/4952368/3337196))
 
- ```bash
- git branch -vv
- ```
+```bash
+git branch -vv
+```
 
- Set the tracking (see [Adding a tracking branch](https://githowto.com/adding_a_tracking_branch))
+Set the tracking (see [Adding a tracking branch](https://githowto.com/adding_a_tracking_branch))
 
- ```bash
- git branch --track local_branch origin/remote_branch
- ```
+```bash
+git branch --track local_branch origin/remote_branch
+```
 
- Remove tracking (see [](https://stackoverflow.com/a/3046478/3337196))
+Remove tracking (see [](https://stackoverflow.com/a/3046478/3337196))
 
- ```bash
- git branch --unset-upstream
- ```
+```bash
+git branch --unset-upstream
+```
 
- or
+or
 
- ```bash
- git branch -d -r origin/remote_branch
- ```
+```bash
+git branch -d -r origin/remote_branch
+```
 
- Update all tracked branches
+Update all tracked branches
 
- ```bash
- git pull --all
- ```
+```bash
+git pull --all
+```
+
+It is also possible to check the status of each branches ([Show git ahead and behind info for all branches, including remotes](https://stackoverflow.com/q/7773939/3337196)), for example, using more recent git versions
+
+```bash
+git for-each-ref --format="%(refname:short) %(upstream:track)" refs/heads
+```
 
 #### Rename a branch
 
 a local branch:
 
- ```bash
- git branch -m oldname newname
- ```
+```bash
+git branch -m oldname newname
+```
 
 or
 
