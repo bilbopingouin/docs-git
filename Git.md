@@ -164,6 +164,12 @@ Set the tracking (see [Adding a tracking branch](https://githowto.com/adding_a_t
 git branch --track local_branch origin/remote_branch
 ```
 
+or if the local branch already exists
+
+```bash
+git branch --set-upstream-to=origin/remote_branch local_branch
+```
+
 Remove tracking (see [](https://stackoverflow.com/a/3046478/3337196))
 
 ```bash
