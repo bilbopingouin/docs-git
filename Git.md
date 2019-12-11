@@ -387,11 +387,25 @@ will merge the branch into the current branch grouping its different commits int
 
 ### Debugging
 
-[Ref. Debugging with git](http://git-scm.com/book/en/v2/Git-Tools-Debugging-with-Git)
+Ref. [Debugging with git](http://git-scm.com/book/en/v2/Git-Tools-Debugging-with-Git)
+
+#### log
+
+`git log` allows to search the history for various things. For example
+
+- Find when a file was deleted ([on SO](https://stackoverflow.com/a/16635324/3337196))
+
+  ```bash
+  git log --full-history -- path/to/file
+  ```
+
+#### blame
 
     git blame -L first,last filename 
 
 checks who and when the lines from first to last of filename were edited
+
+#### bisect
 
 `git bisect` help to go through versions to find out when a bug was introduced.
 using dichotomy and good/bad markers git helps to find the revision where a but was introduced. And then git prints info about the given revision.
@@ -421,6 +435,7 @@ Alternatively, one can use a script that checks directly. The script should retu
 git bisect start <bad hash> <good bash>
 git bisect run test.sh
 ```
+
 
 
 ### Subtree
