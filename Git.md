@@ -987,6 +987,11 @@ Further information on
 - [Maintaining a project: git am](http://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project#_git_am)
 - [git-am](http://git-scm.com/docs/git-am)
 
+Exclude 
+If a file from a patch would cause issues, it is also possible to exclude it:
+
+    git apply 0001-foo.patch --exclude=conflicting.file
+
 
 ### Hooks
 
