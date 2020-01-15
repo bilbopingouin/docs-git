@@ -673,6 +673,16 @@ Make a branch out of a stash
 
     git stash branch branchname
 
+Inspect the stashes
+
+```bash
+git stash show -p               # diff to last stash
+git stash show -p stash@{0}     # same
+git diff stash@{0} master       # compare with a given branch
+```
+
+See also [Git diff against a stash](https://stackoverflow.com/q/7677736/3337196)
+
 ### Tag
 
 Tagging a commit
