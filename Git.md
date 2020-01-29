@@ -194,6 +194,14 @@ It is also possible to check the status of each branches ([Show git ahead and be
 git for-each-ref --format="%(refname:short) %(upstream:track)" refs/heads
 ```
 
+Update a branch without checking it out can be done (when doing a fast-forward)
+
+```bash
+git fetch origin master:master
+```
+
+See also [Merge, update, and pull Git branches without using checkouts](https://stackoverflow.com/a/17722977/3337196).
+
 #### Rename a branch
 
 a local branch:
