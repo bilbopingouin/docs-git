@@ -2048,6 +2048,20 @@ See also
 - [GitLab Merge Requests](https://www.jvt.me/posts/2019/01/19/git-ref-gitlab-merge-requests/)
 - [GitLab checkout merge requests locally](https://docs.gitlab.com/ee/user/project/merge_requests/#checkout-merge-requests-locally)
 
+If a user creating a merge request allows it, it is possible to work on their branch together. This would be done by doing the following
+
+```bash
+git remote add user_fork git@gitlab.com:user/projectname 
+git fetch user_fork
+git checkout user_fork/branchname
+
+# modify things and commit
+
+git push user_fork branchname:branchname
+```
+
+Note the importance of the `:`.
+
 ### Tig
 
 References
