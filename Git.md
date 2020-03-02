@@ -2060,7 +2060,7 @@ git checkout user_fork/branchname
 git push user_fork branchname:branchname
 ```
 
-Note the importance of the `:`.
+Note the importance of the `:`. See also [Gitlab: allow collaboration](https://docs.gitlab.com/ee/user/project/merge_requests/allow_collaboration.html)
 
 ### Tig
 
