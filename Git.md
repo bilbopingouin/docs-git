@@ -2118,7 +2118,7 @@ Example usage:
 
       tig blame file.c
 
-  move to the wanted line and then `,` runs `git blame` as parenting
+  move to the wanted line and then `,` runs `git blame` as parenting ('<' allows to jump back to child)
 
 Some configuration can be placed into a `~/.tigrc` file ([tigrc manual](https://jonas.github.io/tig/doc/tigrc.5.html)), like
 
