@@ -1303,7 +1303,26 @@ git push origin master
 
 Change the author name
 
-    git commit --amend --author="New Name <email@example.com>"
+```bash
+git commit --amend --author="New Name <email@example.com>"
+```
+
+To change several commits at once, one can use
+
+``` bash
+# This part isn't technically required, but avoid further issues
+git config --local user.name "New Name"
+git config --local user.email "email@example.com"
+
+# Rewrite history
+git rebase -i HASH -x "git commit --amend --author 'New Name <email@example.com>' -CHEAD"
+# Simply save the message that pops
+
+# Re-publish (skip if it was only local)
+git push --force origin HEAD
+```
+
+See also [How to amend several commits in Git to change author](https://stackoverflow.com/q/4981126/3337196).
 
 ### Removing a file from history
 
