@@ -273,6 +273,13 @@ git push origin branch-name
 git push origin --delete branch-name # does the same as git checkout -d branch-name but on the remote rep
 ```
 
+Updating a remote branch
+
+``` bash
+git push --force origin branch-name
+git push --force-with-lease branch-name # Only overwrite if the local branch is not outdated
+```
+
 ### Pull
 
 `git pull` runs `git fetch` and `git merge origin/foo` ([Git fetch and merge](http://longair.net/blog/2009/04/16/git-fetch-and-merge/)).
