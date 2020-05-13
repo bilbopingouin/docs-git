@@ -19,6 +19,9 @@
 * [Merge conflicts](#merge-conflicts)
 * [Merge and rebase](#merge-and-rebase)
 * [Debugging](#debugging)
+	* [log](#log)
+	* [blame](#blame)
+	* [bisect](#bisect)
 * [Subtree](#subtree)
 * [Submodule](#submodule)
 	* [add a submodule](#add-a-submodule)
@@ -922,13 +925,24 @@ git cherry-pick 01234....
 
 Result
 
-    cat foo
-        hello
-        world
+```bash
+$ cat foo
+hello
+world
+```
+
+It is also possible to cherry-pick a range of commits using
+
+```bash
+git cherry-pick A..B
+```
+
+would reapply all commits from A (excluded) to B (included).
 
 See also
 - [Cherry pick](http://wiki.koha-community.org/wiki/Using_Git_Cherry_Pick)
 - [How od you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/449632#449632)
+- [How to cherry-pick multiple commits](https://stackoverflow.com/q/1670970/3337196)
 
 ### Patch
 
