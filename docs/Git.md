@@ -13,6 +13,8 @@
 	* [Rename a branch](#rename-a-branch)
 	* [Further](#further)
 * [Origin and remote updates](#origin-and-remote-updates)
+	* [Update and synchronisation](#update-and-synchronisation)
+	* [Remote management](#remote-management)
 * [Push](#push)
 * [Pull](#pull)
 * [Diffs](#diffs)
@@ -247,25 +249,57 @@ allows to re-create the branch. A branch name should be seen as a C-pointer. It 
 
 ### Origin and remote updates
 
+#### Update and synchronisation
+
 Clone
 
-    git clone me@gitserver:project.git
+```bash
+git clone me@gitserver:project.git
+```
 
 (do some work and some commits)
 someone update the server's version
 
-    git fetch origin
+```bash
+git fetch origin
+```
 
 this makes two different branches locally: master and origin/master which could be merged
 if there is a branch named foo on the server, you will have a read only origin/foo branch locally then either
 
-    git merge origin/foo
+```bash
+git merge origin/foo
+```
 
 or
 
 ```bash
 git checkout -b foo origin/foo # creates a local version of the foo branch which can be worked on
 ```
+
+See also [tracking](#remote-tracking).
+
+#### Remote management
+
+There are a few commands to manage the remote(s). Like
+
+```bash
+git remote show		# List the remotes names (typically origin, and other(s) if available)
+git remote show origin	# Provides details about the remote (needs connection)
+git remote add remote-name https://github.com/bilbopingouin/docs-git.git  # Add a new remote (no connection required)
+git remote rm remote-name # Remove the link to a specific remote
+git remote rename old-name new-name # Change the reference name to the remote
+git remote get-url remote-name	# Display the URL
+git remote set-url remote-name https://github.com/bilbopingouin/docs-git.git  #	Update the link
+```
+
+And generally, running
+
+```bash
+git remote --help
+```
+
+provides some more information.
 
 ### Push
 
