@@ -1527,23 +1527,23 @@ with the main repo being `repo1` which includes a submodule: `subrepo1` (and one
 
 1. Get the code
 
-      git clone repo1
-      git submodule init
-      git submodule update
+       git clone repo1
+       git submodule init
+       git submodule update
 
 2. Get the history of the submodule into the main
 
-      git remote add subm_origin subrepo1   # Adding as remote the address of the submodule
-      git fetch subm_origin                   
+       git remote add subm_origin subrepo1   # Adding as remote the address of the submodule
+       git fetch subm_origin                   
 
-      git merge -s ours --no-commit subm_origin/branch     
+       git merge -s ours --no-commit subm_origin/branch     
 
   to make sure, one can run `git submodule` this shows the commit/branches of the submodule, one should use the `subm_origin/<last_name_after_slash_from_git_submodule_command>`
 
 3. Suppress references to the submodule, without deleting the code
 
-      git rm --cached path/to/subm
-      git rm .gitmodules
+       git rm --cached path/to/subm
+       git rm .gitmodules
 
   alternatively
 
@@ -1552,12 +1552,12 @@ with the main repo being `repo1` which includes a submodule: `subrepo1` (and one
 
   finally
 
-      rm -rf path/to/subm/.git
+       rm -rf path/to/subm/.git
 
 4. Add the code as new 
 
-      git add path/to/subm
-      git commit -m "submodule reintegrated"
+       git add path/to/subm
+       git commit -m "submodule reintegrated"
 
 5. Clean
 
