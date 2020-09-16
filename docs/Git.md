@@ -1538,26 +1538,28 @@ with the main repo being `repo1` which includes a submodule: `subrepo1` (and one
 
        git merge -s ours --no-commit subm_origin/branch     
 
-  to make sure, one can run `git submodule` this shows the commit/branches of the submodule, one should use the `subm_origin/<last_name_after_slash_from_git_submodule_command>`
+  to make sure of the name of the branch, one can run `git submodule` this shows the commit/branches of the submodule, one should use the `subm_origin/<last_name_after_slash_from_git_submodule_command>`.
+  
+  It is possible that git complains about unrelated histories, which is actually true. But then the option: `--allow-unrelated-histories` should allow to merge those.
 
 3. Suppress references to the submodule, without deleting the code
-
+  
        git rm --cached path/to/subm
        git rm .gitmodules
-
+  
   alternatively
-
+  
       vim .gitsubmodules
       git add .gitsubmodules
-
+  
   finally
-
-       rm -rf path/to/subm/.git
+  
+      rm -rf path/to/subm/.git
 
 4. Add the code as new 
 
-       git add path/to/subm
-       git commit -m "submodule reintegrated"
+      git add path/to/subm
+      git commit -m "submodule reintegrated"
 
 5. Clean
 
