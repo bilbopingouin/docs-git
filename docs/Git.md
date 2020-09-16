@@ -1543,27 +1543,27 @@ with the main repo being `repo1` which includes a submodule: `subrepo1` (and one
   It is possible that git complains about unrelated histories, which is actually true. But then the option: `--allow-unrelated-histories` should allow to merge those.
 
 3. Suppress references to the submodule, without deleting the code
-  
+   
        git rm --cached path/to/subm
        git rm .gitmodules
-  
-  alternatively
-  
-      vim .gitsubmodules
-      git add .gitsubmodules
-  
-  finally
-  
-      rm -rf path/to/subm/.git
+   
+   alternatively
+   
+       vim .gitsubmodules
+       git add .gitsubmodules
+   
+   finally
+   
+       rm -rf path/to/subm/.git
 
 4. Add the code as new 
-
-      git add path/to/subm
-      git commit -m "submodule reintegrated"
+   
+       git add path/to/subm
+       git commit -m "submodule reintegrated"
 
 5. Clean
-
-      git remote rm subm_origin
+   
+       git remote rm subm_origin
 
 Note that the last part (after the merge) integrate the current files into the current repo. But the merge and preceeding allows to keep the history of the submodules.
 
