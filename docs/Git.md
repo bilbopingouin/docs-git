@@ -451,12 +451,14 @@ To combine c2 and c3, we can either merge or rebase (see also the respective sec
   ``` bash
   git merge c3
   ```
-  BASE is c1, LOCAL is c2 and REMOTE is c3.
+  BASE is c1, LOCAL is c2 and REMOTE is c3.  
+  *ours* is c2 and *theirs* is c3.
 - rebase: 
   ``` bash
   git rebase c3
   ```
-  BASE is c1, LOCAL is c3 and REMOTE is c2.
+  BASE is c1, LOCAL is c3 and REMOTE is c2.  
+  *ours* is c3 and *theirs* is c2.
 
 ### Debugging
 
