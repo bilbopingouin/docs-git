@@ -437,6 +437,27 @@ see also [Squash commits](http://davidwalsh.name/squash-commits-git):
 
 will merge the branch into the current branch grouping its different commits into one ([Git merge](http://www.git-scm.com/docs/git-merge))
 
+### BASE / LOCAL / REMOTE
+
+Considering the following schematics,
+
+```
+c0 <--- c1 <-- c3 
+            `- c2 (HEAD)
+```
+
+To combine c2 and c3, we can either merge or rebase (see also the respective sections above). I want to point out to the process names.
+- merge:
+  ``` bash
+  git merge c3
+  ```
+  BASE is c1, LOCAL is c2 and REMOTE is c3.
+- rebase: 
+  ``` bash
+  git rebase c3
+  ```
+  BASE is c1, LOCAL is c3 and REMOTE is c2.
+
 ### Debugging
 
 Ref. [Debugging with git](http://git-scm.com/book/en/v2/Git-Tools-Debugging-with-Git)
