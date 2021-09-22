@@ -761,7 +761,8 @@ It is also possible control what gets added to the stash, for example
 ```bash
 git stash -u   # or --include-untracked includes the untracked files into the stash
 git stash -a   # or --all also includes the files that would be ignored with the .gitignore
-git stash -p   # runs interactively through the modifications to see if we want to include them in the stash or not	    
+git stash -p   # runs interactively through the modifications to see if we want to include them in the stash or not
+git stash --keep-index # Stash all the changes, but leave the staged files changes in the directory	    
 ```
 	   
 
