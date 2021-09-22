@@ -756,7 +756,18 @@ git stash show -p stash@{0}     # same
 git diff stash@{0} master       # compare with a given branch
 ```
 
-See also [Git diff against a stash](https://stackoverflow.com/q/7677736/3337196)
+It is also possible control what gets added to the stash, for example
+	    
+```bash
+git stash -u   # or --include-untracked includes the untracked files into the stash
+git stash -a   # or --all also includes the files that would be ignored with the .gitignore
+git stash -p   # runs interactively through the modifications to see if we want to include them in the stash or not	    
+```
+	   
+
+See also:
+- [Git diff against a stash](https://stackoverflow.com/q/7677736/3337196)
+- [Git stash](https://www.atlassian.com/git/tutorials/saving-changes/git-stash)
 
 ### Tag
 
