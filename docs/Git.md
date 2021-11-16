@@ -783,8 +783,8 @@ git tag -a v1.2 55646830 # tag the previous commit with hash 55646830
 Sharing a tag
 
 ```bash
-git push origin v1.5 # share the tag on the remote, alternatively
-git push origin --tags # share all the tags
+git push origin v1.5            # share the (single) tag on the remote, alternatively
+git push origin --tags          # share all the tags
 git checkout -b version2 v2.0.0 # creates the branch version2 which corresponds to the v2.0.0
 ```
 
@@ -2264,3 +2264,19 @@ gitstats repo output
 ```
 
 It will generate different stats which will be provided in the `output` directory. Some options can be set and are summarised in its manpage.
+	
+## List files
+	
+To list the files tracked by git, simply use
+	
+```shell
+git ls-tree
+```
+
+To see the files within a directory (including sub-directory), one can use
+	
+```shell
+git ls-tree -r --name-only HEAD
+```
+
+Instead of `HEAD`, any commit can be used.
