@@ -2265,7 +2265,7 @@ gitstats repo output
 
 It will generate different stats which will be provided in the `output` directory. Some options can be set and are summarised in its manpage.
 	
-## List files
+### List files
 	
 To list the files tracked by git, simply use
 	
