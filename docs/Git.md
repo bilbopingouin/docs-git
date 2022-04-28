@@ -2008,6 +2008,28 @@ this gives some information that the version from file is merged from somewhere 
 See also
 - [How do you merge selective files with git merge](https://stackoverflow.com/questions/449541/how-do-you-merge-selective-files-with-git-merge/7184182#7184182)
 - [Stashing](http://git-scm.com/book/en/v1/Git-Tools-Stashing)
+	
+	
+### Worktree
+	
+Worktree is a way to checkout a specific commit/branch in another location. This is useful if you have to work on two branches in parallel. Or also to check a specific commit (code review, bug fix, etc.). It can be seen as an alternative to `git stash`.
+
+The basic usage is
+	
+```shell
+git worktree add local-dest branch-name
+```
+
+This would checkout the `branch-name` and store it in the directory `local-dest`. One difference to a full checkout, is that both repositories actually share the same `.git/` directory (which might be very large).
+	
+It can then be removed using
+
+```shell
+git worktree remove local-dest
+```
+
+See also [man](https://www.git-scm.com/docs/git-worktree).
+
 
 ### Git platforms
 
