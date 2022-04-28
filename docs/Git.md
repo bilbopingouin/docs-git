@@ -2,7 +2,8 @@
 
 ### Table of content
 
-* auto-gen TOC:  
+* auto-gen TOC:
+
 {:toc}
 
 <!-- vim-markdown-toc GFM -->
