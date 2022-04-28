@@ -2,10 +2,6 @@
 
 ### Table of content
 
-* auto-gen TOC:
-
-{:toc}
-
 <!-- vim-markdown-toc GFM -->
 
 * [Branches](#branches)
