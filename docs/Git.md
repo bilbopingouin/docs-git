@@ -1446,10 +1446,16 @@ and want to get to
 
 for a  recent git version (>=1.7.11)
 
-    git subtree split -P def -b def_split_branch_name
+    # In original repo
+	git subtree split -P def -b def_split_branch_name
+	
+	# Somewhere else
     mkdir bar
+	cd bar
     git init
-    git pull foo def_split_branch_name
+    git pull path/to/foo def_split_branch_name
+
+	# Eventually add some more clean up
     git filter-branch --tree-filter 'rm -rf def' HEAD # cleans the history
 
 See [Detach subdirectory into separate git repo](https://stackoverflow.com/questions/359424/detach-subdirectory-into-separate-git-repository/17864475#17864475)
